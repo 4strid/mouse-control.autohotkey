@@ -13,17 +13,20 @@ Yes I know these are backward from regular Vim.
 ### Normal Mode
 
 - `hjkl` move the mouse
-- `i` for left click
-- `o` for right click
-- `v` for hold down left click
-- `^v` for hold down right click (???)
-- `e` for scroll down
-- `y` for scroll up
-- `d` for scroll down faster
-- `u` for scroll up faster
-- `Y` to "yank" a window (click down its title bar so you can reposition it)
-- `b` for "back" mouse button
-- `n` for "forward" mouse button
+- `HJKL` jump to edges of the screen
+- `M` jump to center of the screen
+- `i` left click
+- `o` right click
+- `v` hold down left click
+- `^v`hold down right click (???)
+- `e` scroll down
+- `y` scroll up
+- `d` scroll down faster
+- `u` scroll up faster
+- `Y` "yank" a window (click down on its title bar so you can reposition it)
+- `b` "back" mouse button
+- `n` "forward" mouse button
+- `q` another way to exit normal mode
 
 ### Normal "Quick" Mode
 

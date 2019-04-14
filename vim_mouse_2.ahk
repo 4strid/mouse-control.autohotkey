@@ -23,7 +23,6 @@ Accelerate() {
 	velocityY := 0
 
 	Loop {
-
 		LEFT := -1 * GetKeyState("h", "P")
 		DOWN := GetKeyState("j", "P")
 		UP := -1 * GetKeyState("k", "P")
@@ -67,17 +66,13 @@ Accelerate() {
 		Else If (UP + DOWN > 0) {
 			velocityY := Min(velocityY + 0.7 * UP + 0.7 * DOWN, MAX_VELOCITY)
 		}
-
 		;MsgBox, %NORMAL_MODE%
 		;msg1 := "h " . LEFT . " j  " . DOWN . " k " . UP . " l " . RIGHT
 		;MsgBox, %msg1%
 		;msg2 := "Moving " . velocityX . " " . velocityY
 		;MsgBox, %msg2%
-
-
 		MouseMove, %velocityX%, %velocityY%, 0, R
-		
-		Sleep 30
+		Sleep 15.6
 	}
 }
 
@@ -88,7 +83,6 @@ EnterNormalMode(quick:=false) {
 		msg := msg . " (Quick)"
 	}
 	ShowModePopup(msg)
-
 	If (NORMAL_MODE) {
 		Return
 	}
@@ -102,7 +96,6 @@ EnterNormalMode(quick:=false) {
 EnterInsertMode() {
 	;MsgBox, "Welcome to Insert Mode"
 	ShowModePopup("Insert Mode")
-
 	NORMAL_MODE := false
 	NORM_Q_MODE := false
 	INSERT_MODE := true
@@ -111,7 +104,7 @@ EnterInsertMode() {
 ShowModePopup(msg) {
 	; clean up any lingering popups
 	ClosePopup()
-	y:= A_ScreenHeight - 50
+	y := A_ScreenHeight - 50
 	Progress, b x15 y%y% zh0,, %msg%,
 	SetTimer, ClosePopup, -1600
 }
@@ -167,6 +160,38 @@ JumpMiddle3(quick:=false) {
   MouseMove, (A_ScreenWidth * 2 + A_ScreenWidth // 2), (A_ScreenHeight // 2)
 }
 
+JumpLeftEdge(quick:=false) {
+	EnterNormalMode(quick)
+  y := 0
+  CoordMode, Mouse, Screen
+  MouseGetPos,, y
+  MouseMove, 2, y
+}
+
+JumpBottomEdge(quick:=false) {
+	EnterNormalMode(quick)
+  x := 0
+  CoordMode, Mouse, Screen
+  MouseGetPos, x
+  MouseMove, x, (A_ScreenHeight - 0)
+}
+
+JumpTopEdge(quick:=false) {
+	EnterNormalMode(quick)
+  x := 0
+  CoordMode, Mouse, Screen
+  MouseGetPos, x
+  MouseMove, x, 0
+}
+
+JumpRightEdge(quick:=false) {
+	EnterNormalMode(quick)
+  y := 0
+  CoordMode, Mouse, Screen
+  MouseGetPos,, y
+  MouseMove, (A_ScreenWidth - 2), y
+}
+
 MouseBack() {
 	Click, X1
 }
@@ -197,8 +222,10 @@ ScrollDown4() {
 	Click, WheelDown
 }
 
+; BINDINGS
 #If (NORMAL_MODE)
 	Esc:: EnterInsertMode()
+	q:: EnterInsertMode()
 	; bind these in case win alt is still held down
   <#<!h:: Return
   <#<!j:: Return
@@ -209,18 +236,22 @@ ScrollDown4() {
 	j:: Return
 	k:: Return
 	l:: Return
+	+H:: JumpLeftEdge()
+	+J:: JumpBottomEdge()
+	+K:: JumpTopEdge()
+	+L:: JumpRightEdge()
 	; commands
 	i:: MouseLeft()
 	<#<!i:: MouseLeft()
 	o:: MouseRight()
 	<#<!o:: MouseRight()
 	; do not conflict with y as in "scroll up"
-	+y:: Yank()
+	+Y:: Yank()
 	v:: Drag()
 	^v:: Drag()
-	+m:: JumpMiddle()
-	^h:: JumpMiddle3()
-	^l:: JumpMiddle2()
+	+M:: JumpMiddle()
+	^H:: JumpMiddle3()
+	^L:: JumpMiddle2()
 	n:: MouseForward()
 	<#<!n:: MouseForward()
 	b:: MouseBack()
@@ -243,11 +274,16 @@ ScrollDown4() {
   <#<!j:: EnterNormalMode(true)
   <#<!k:: EnterNormalMode(true)
   <#<!l:: EnterNormalMode(true)
-  <#<!+m:: JumpMiddle(true)
+  <#<!+M:: JumpMiddle(true)
+	<#<!+H:: JumpLeftEdge(true)
+	<#<!+J:: JumpBottomEdge(true)
+	<#<!+K:: JumpTopEdge(true)
+	<#<!+L:: JumpRightEdge(true)
 	; Immediately issue commands
+  <#<!o:: MouseRight()
   <#<!v:: Drag()
   <#<!^v:: RightDrag()
-  <#<!+y:: Yank()
+  <#<!+Y:: Yank()
 	<#<!n:: MouseForward()
 	<#<!b:: MouseBack()
 	<#<!e:: ScrollDown()
@@ -268,6 +304,11 @@ ScrollDown4() {
 	<#<!i:: MouseLeft()
 	<#<!o:: MouseRight()
   <#<!+m:: JumpMiddle(true)
+	; FIXME: why are these a little glitchy?
+	<#<!+H:: JumpLeftEdge(true)
+	<#<!+J:: JumpBottomEdge(true)
+	<#<!+K:: JumpTopEdge(true)
+	<#<!+L:: JumpRightEdge(true)
 	<#<!v:: Drag(true)
 	<#<!^v:: RightDrag(true)
 	<#<!y:: Yank(true)
