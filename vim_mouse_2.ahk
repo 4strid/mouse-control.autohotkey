@@ -7,10 +7,10 @@
 ; 2019-04-14
 
 global INSERT_MODE := true
+global INSERT_QUICK := true
 global NORMAL_MODE := false
-global NORM_Q_MODE := false
-global N_WASD_MODE := false
-
+global NORMAL_QUICK := false
+global NORMAL_WASD := false
 
 global LEFT := 0
 global DOWN := 0
@@ -29,8 +29,8 @@ Accelerate() {
     DOWN := GetKeyState("j", "P")
     UP := -1 * GetKeyState("k", "P")
     RIGHT := GetKeyState("l", "P")
-  
-     if (N_WASD_MODE) {
+
+    if (NORMAL_WASD) {
       UP := -1 * GetKeyState("w", "P")
       LEFT := -1 * GetKeyState("a", "P")
       DOWN := GetKeyState("s", "P")
@@ -40,7 +40,7 @@ Accelerate() {
     alt_down := GetKeyState("Alt", "P")
     win_down := GetKeyState("LWin", "P")
 
-    If (NORM_Q_MODE) {
+    If (NORMAL_QUICK) {
       If (alt_down == 0 && win_down == 0) {
         EnterInsertMode()
       }
@@ -75,7 +75,7 @@ Accelerate() {
     Else If (UP + DOWN > 0) {
       velocityY := Min(velocityY + 0.7 * UP + 0.7 * DOWN, MAX_VELOCITY)
     }
-    ;MsgBox, %NORMAL_MODE%
+    ;MsgBox, %_MODE%
     ;msg1 := "h " . LEFT . " j  " . DOWN . " k " . UP . " l " . RIGHT
     ;MsgBox, %msg1%
     ;msg2 := "Moving " . velocityX . " " . velocityY
@@ -87,34 +87,42 @@ Accelerate() {
 
 EnterNormalMode(quick:=false) {
   ;MsgBox, "Welcome to Normal Mode"
-  msg := "Normal Mode"
-  If (quick) {
-    msg := msg . " (Quick)"
-  }
-  ShowModePopup(msg)
   If (NORMAL_MODE) {
     Return
   }
+  msg := "NORMAL"
+  If (NORMAL_WASD) {
+    msg := msg . " (WASD)"
+  }
+  If (quick) {
+    msg := msg . " (QUICK)"
+  }
+  ShowModePopup(msg)
   NORMAL_MODE := true
-  NORM_Q_MODE := quick
+  NORMAL_QUICK := quick
   INSERT_MODE := false
+  INSERT_QUICK := false
 
   Accelerate()
 }
 
-EnterInsertMode() {
-  ;MsgBox, "Welcome to Insert Mode"
-  ShowModePopup("Insert Mode")
-  NORMAL_MODE := false
-  NORM_Q_MODE := false
-  N_WASD_MODE := false
-  INSERT_MODE := true
+EnterWASDMode() {
+  NORMAL_WASD := true
+  EnterNormalMode()
 }
 
-EnterWASDMode() {
-  N_WASD_MODE := true
-  EnterNormalMode()
-  ShowModePopup("RIGHT H")
+EnterInsertMode(quick:=false) {
+  ;MsgBox, "Welcome to Insert Mode"
+  msg := "INSERT"
+  If (quick) {
+    msg := msg . " (QUICK)"
+  }
+  ShowModePopup(msg)
+  INSERT_MODE := true
+  INSERT_QUICK := quick
+  NORMAL_MODE := false
+  NORMAL_QUICK := false
+  NORMAL_WASD := false
 }
 
 ShowModePopup(msg) {
@@ -154,6 +162,10 @@ MouseLeft() {
 
 MouseRight() {
   Click, Right
+}
+
+MouseMiddle() {
+  Click, Middle
 }
 
 ; TODO: When we have more monitors, set up H and L to use current screen as basis
@@ -229,6 +241,7 @@ ScrollUp4() {
   Click, WheelUp
   Click, WheelUp
   Click, WheelUp
+  Return
 }
 
 ScrollDown4() {
@@ -236,19 +249,20 @@ ScrollDown4() {
   Click, WheelDown
   Click, WheelDown
   Click, WheelDown
+  Return
 }
 
 ; BINDINGS
 #If (NORMAL_MODE)
-  Esc:: EnterInsertMode()
-  ;q EnterInsertMode()
-    <#<!r:: EnterWASDMode()
+  ; I hate not being able to press Escape
+  ; Esc EnterInsertMode()
+  ^q:: EnterInsertMode(true)
+  <#<!r:: EnterWASDMode()
   ; bind these in case win alt is still held down
   <#<!h:: Return
   <#<!j:: Return
   <#<!k:: Return
   <#<!l:: Return
-  ; don't send these to underlying application
   +H:: JumpLeftEdge()
   +J:: JumpBottomEdge()
   +K:: JumpTopEdge()
@@ -256,13 +270,14 @@ ScrollDown4() {
   ; commands
   i:: MouseLeft()
   <#<!i:: MouseLeft()
-  ^i:: MouseLeft()
   o:: MouseRight()
   <#<!o:: MouseRight()
+  p:: MouseMiddle()
+  <#<!p:: MouseMiddle()
   ; do not conflict with y as in "scroll up"
   +Y:: Yank()
   v:: Drag()
-  ^v:: Drag()
+  +V:: RightDrag()
   +M:: JumpMiddle()
   ^H:: JumpMiddle3()
   ^L:: JumpMiddle2()
@@ -272,7 +287,6 @@ ScrollDown4() {
   <#<!b:: MouseBack()
   ; allow for modifier keys (or more importantly a lack of them) by lifting ctrl requirement for these hotkeys
   y:: ScrollUp()
-  ;d ScrollDown4()
   u:: ScrollUp4()
   0:: ScrollDown()
   9:: ScrollUp()
@@ -280,15 +294,15 @@ ScrollDown4() {
   [:: ScrollUp()
   +]:: ScrollDown4()
   +[:: ScrollUp4()
-; intersecting hotkeys
-#If (NORMAL_MODE && N_WASD_MODE == false)
+; Intersecting hotkeys
+#If (NORMAL_MODE && NORMAL_WASD == false)
+  q:: EnterInsertMode()
   h:: Return
   j:: Return
   k:: Return
   l:: Return
   e:: ScrollDown()
   d:: ScrollDown4()
-  q:: EnterInsertMode()
   ; for windows explorer
 #If (NORMAL_MODE && WinActive("ahk_class CabinetWClass"))
   ^h:: Send {Left}
@@ -310,8 +324,9 @@ ScrollDown4() {
   <#<!+L:: JumpRightEdge(true)
   ; Immediately issue commands
   <#<!o:: MouseRight()
+  <#<!p:: MouseMiddle()
   <#<!v:: Drag()
-  <#<!^v:: RightDrag()
+  <#<!+V:: RightDrag()
   <#<!+Y:: Yank()
   <#<!n:: MouseForward()
   <#<!b:: MouseBack()
@@ -319,11 +334,9 @@ ScrollDown4() {
   <#<!y:: ScrollUp()
   <#<!d:: ScrollDown4()
   <#<!u:: ScrollUp4()
-#If (NORM_Q_MODE)
-  ; this is unnecessary but when I was first writing the script I'd get stuck sometimes
-  Esc:: EnterInsertMode()
-  ; upgrade to real normal mode
-  <#<!^i:: EnterNormalMode()
+#If (INSERT_MODE && INSERT_QUICK)
+  ^q:: EnterNormalMode()
+#If (NORMAL_QUICK)
   ; Intercept movement keys
   <#<!h:: Return
   <#<!j:: Return
@@ -332,6 +345,7 @@ ScrollDown4() {
   ; commands
   <#<!i:: MouseLeft()
   <#<!o:: MouseRight()
+  <#<!p:: MouseRight()
   <#<!+m:: JumpMiddle(true)
   ; FIXME: why are these a little glitchy?
   <#<!+H:: JumpLeftEdge(true)
@@ -339,22 +353,22 @@ ScrollDown4() {
   <#<!+K:: JumpTopEdge(true)
   <#<!+L:: JumpRightEdge(true)
   <#<!v:: Drag(true)
-  <#<!^v:: RightDrag(true)
+  <#<!+V:: RightDrag(true)
   <#<!y:: Yank(true)
   <#<!n:: MouseForward()
   <#<!b:: MouseBack()
   ; weird interactions with modifier keys, just go into insert mode if you want to scroll
-  ;<#<!^e:: ScrollDown()
-  ;<#<!^y:: ScrollUp()
-  ;<#<!^d:: ScrollDown4()
-  ;<#<!^u:: ScrollUp4()
-#If (N_WASD_MODE)
+  ;<#<!^e ScrollDown()
+  ;<#<!^y ScrollUp()
+  ;<#<!^d ScrollDown4()
+  ;<#<!^u ScrollUp4()
+#If (NORMAL_WASD)
   w:: Return
   a:: Return
   s:: Return
   d:: Return
-  q:: ScrollDown()
-  e:: ScrollUp()
+  e:: ScrollDown()
+  q:: ScrollUp()
   Space:: ScrollDown4()
   r:: MouseLeft()
   t:: MouseRight()
