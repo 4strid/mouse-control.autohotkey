@@ -25,16 +25,21 @@ Accelerate() {
   velocityY := 0
 
   Loop {
-    LEFT := -1 * GetKeyState("h", "P")
-    DOWN := GetKeyState("j", "P")
-    UP := -1 * GetKeyState("k", "P")
-    RIGHT := GetKeyState("l", "P")
+    LEFT := 0
+    DOWN := 0
+    UP := 0
+    RIGHT := 0
+
+    LEFT := LEFT - 1 * GetKeyState("h", "P")
+    DOWN := DOWN + GetKeyState("j", "P")
+    UP := UP - 1 * GetKeyState("k", "P")
+    RIGHT := RIGHT + GetKeyState("l", "P")
 
     if (NORMAL_WASD) {
-      UP := -1 * GetKeyState("w", "P")
-      LEFT := -1 * GetKeyState("a", "P")
-      DOWN := GetKeyState("s", "P")
-      RIGHT := GetKeyState("d", "P")
+      UP := UP - 1 * GetKeyState("w", "P")
+      LEFT := LEFT - 1 * GetKeyState("a", "P")
+      DOWN := DOWN + GetKeyState("s", "P")
+      RIGHT := RIGHT + GetKeyState("d", "P")
     }
 
     alt_down := GetKeyState("Alt", "P")
@@ -363,6 +368,7 @@ ScrollDown4() {
   ;<#<!^d ScrollDown4()
   ;<#<!^u ScrollUp4()
 #If (NORMAL_WASD)
+  <#<!x:: EnterInsertMode()
   w:: Return
   a:: Return
   s:: Return
