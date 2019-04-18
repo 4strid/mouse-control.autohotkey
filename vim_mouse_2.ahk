@@ -5,6 +5,8 @@
 ; 
 ; Astrid Fesz-Nguyen
 ; 2019-04-14
+;
+; NOTE THE README IS WAY OUT OF DATE, THIS FILE IS WHERE TO LOOK TO SEE WHAT DO
 
 global INSERT_MODE := true
 global INSERT_QUICK := true
@@ -12,82 +14,72 @@ global NORMAL_MODE := false
 global NORMAL_QUICK := false
 global NORMAL_WASD := false
 
-global LEFT := 0
-global DOWN := 0
-global UP := 0
-global RIGHT := 0
+; Drag takes care of this now
+;global MAX_VELOCITY := 72
+global FORCE := 2.2
+global RESISTANCE := 0.96
 
-global MAX_VELOCITY := 27
+global VELOCITY_X := 0
+global VELOCITY_Y := 0
 
 Accelerate() {
-
-  velocityX := 0
-  velocityY := 0
-
-  Loop {
-    LEFT := 0
-    DOWN := 0
-    UP := 0
-    RIGHT := 0
-
-    LEFT := LEFT - 1 * GetKeyState("h", "P")
-    DOWN := DOWN + GetKeyState("j", "P")
-    UP := UP - 1 * GetKeyState("k", "P")
-    RIGHT := RIGHT + GetKeyState("l", "P")
-
-    if (NORMAL_WASD) {
-      UP := UP - 1 * GetKeyState("w", "P")
-      LEFT := LEFT - 1 * GetKeyState("a", "P")
-      DOWN := DOWN + GetKeyState("s", "P")
-      RIGHT := RIGHT + GetKeyState("d", "P")
-    }
-
-    alt_down := GetKeyState("Alt", "P")
-    win_down := GetKeyState("LWin", "P")
-
-    If (NORMAL_QUICK) {
-      If (alt_down == 0 && win_down == 0) {
-        EnterInsertMode()
-      }
-    }
-
-    If (INSERT_MODE) {
-      Break
-    }
-
-    If (LEFT == 0 && RIGHT == 0) {
-      velocityX := 0
-    }
-    Else If (LEFT + RIGHT == 0) {
-      velocityX := velocityX * 0.66
-    }
-    Else If (LEFT + RIGHT < 0) {
-      velocityX := Max(velocityX + 0.9 * LEFT + 0.9 * RIGHT, -1 * MAX_VELOCITY)
-    }
-    Else If (LEFT + RIGHT > 0) {
-      velocityX := Min(velocityX + 0.9 * LEFT + 0.9 * RIGHT, MAX_VELOCITY)
-    }
-
-    If (UP == 0 && DOWN == 0) {
-      velocityY := 0
-    }
-    Else If (UP + DOWN == 0) {
-      velocityY := velocityY * 0.66
-    }
-    Else If (UP + DOWN < 0) {
-      velocityY := Max(velocityY + 0.7 * UP + 0.7 * DOWN, -1 * MAX_VELOCITY)
-    }
-    Else If (UP + DOWN > 0) {
-      velocityY := Min(velocityY + 0.7 * UP + 0.7 * DOWN, MAX_VELOCITY)
-    }
-    ;MsgBox, %_MODE%
-    ;msg1 := "h " . LEFT . " j  " . DOWN . " k " . UP . " l " . RIGHT
-    ;MsgBox, %msg1%
-    ;msg2 := "Moving " . velocityX . " " . velocityY
-    ;MsgBox, %msg2%
-    MouseMove, %velocityX%, %velocityY%, 0, R
-    Sleep 15.6
+  LEFT := 0
+  DOWN := 0
+  UP := 0
+  RIGHT := 0
+  
+  LEFT := LEFT - GetKeyState("h", "P")
+  DOWN := DOWN + GetKeyState("j", "P")
+  UP := UP - GetKeyState("k", "P")
+  RIGHT := RIGHT + GetKeyState("l", "P")
+  
+  if (NORMAL_WASD) {
+    UP := UP -  GetKeyState("w", "P")
+    LEFT := LEFT - GetKeyState("a", "P")
+    DOWN := DOWN + GetKeyState("s", "P")
+    RIGHT := RIGHT + GetKeyState("d", "P")
   }
+  
+  alt_down := GetKeyState("Alt", "P")
+  win_down := GetKeyState("LWin", "P")
+  
+  If (NORMAL_QUICK) {
+    If (alt_down == 0 && win_down == 0) {
+      EnterInsertMode()
+    }
+  }
+  
+  If (INSERT_MODE) {
+    VELOCITY_X := 0
+    VELOCITY_Y := 0
+    SetTimer,, Off
+  }
+  
+  If (LEFT == 0 && RIGHT == 0) {
+    VELOCITY_X := 0
+  }
+  Else If (LEFT + RIGHT == 0) {
+    VELOCITY_X := Round(VELOCITY_X ** 0.92 - 1)
+  }
+  Else {
+    VELOCITY_X := VELOCITY_X * RESISTANCE + FORCE * (LEFT + RIGHT)
+  }
+  
+  If (UP == 0 && DOWN == 0) {
+    VELOCITY_Y := 0
+  }
+  Else If (UP + DOWN == 0) {
+    VELOCITY_Y := Round(VELOCITY_Y ** 0.92 - 1)
+  }
+  Else {
+    VELOCITY_Y := VELOCITY_Y * RESISTANCE + FORCE * (UP + DOWN)
+  }
+  ;MsgBox, %_MODE%
+  ;msg1 := "h " . LEFT . " j  " . DOWN . " k " . UP . " l " . RIGHT
+  ;MsgBox, %msg1%
+  ;msg2 := "Moving " . VELOCITY_X . " " . VELOCITY_Y
+  ;MsgBox, %msg2%
+  MouseMove, %VELOCITY_X%, %VELOCITY_Y%, 0, R
 }
 
 EnterNormalMode(quick:=false) {
@@ -108,12 +100,18 @@ EnterNormalMode(quick:=false) {
   INSERT_MODE := false
   INSERT_QUICK := false
 
-  Accelerate()
+  SetTimer, Accelerate, 16
 }
 
 EnterWASDMode() {
+  ShowModePopup("NORMAL (WASD)")
   NORMAL_WASD := true
   EnterNormalMode()
+}
+
+ExitWASDMode() {
+  ShowModePopup("NORMAL")
+  NORMAL_WASD := false
 }
 
 EnterInsertMode(quick:=false) {
@@ -257,13 +255,20 @@ ScrollDown4() {
   Return
 }
 
+
 ; BINDINGS
 #If (NORMAL_MODE)
   ; I hate not being able to press Escape
   ; Esc EnterInsertMode()
-  ^q:: EnterInsertMode(true)
-  <#<!r:: EnterWASDMode()
+  ^q:: EnterInsertMode()
+  ; for Vimium hotlinks
+  ^f:: EnterInsertMode(true)
+  ~f:: EnterInsertMode(true)
   ; bind these in case win alt is still held down
+  h:: Return
+  j:: Return
+  k:: Return
+  l:: Return
   <#<!h:: Return
   <#<!j:: Return
   <#<!k:: Return
@@ -274,6 +279,8 @@ ScrollDown4() {
   +L:: JumpRightEdge()
   ; commands
   i:: MouseLeft()
+  ^i:: MouseLeft()
+  +I:: MouseLeft()
   <#<!i:: MouseLeft()
   o:: MouseRight()
   <#<!o:: MouseRight()
@@ -291,7 +298,6 @@ ScrollDown4() {
   b:: MouseBack()
   <#<!b:: MouseBack()
   ; allow for modifier keys (or more importantly a lack of them) by lifting ctrl requirement for these hotkeys
-  y:: ScrollUp()
   u:: ScrollUp4()
   0:: ScrollDown()
   9:: ScrollUp()
@@ -302,12 +308,11 @@ ScrollDown4() {
 ; Intersecting hotkeys
 #If (NORMAL_MODE && NORMAL_WASD == false)
   q:: EnterInsertMode()
-  h:: Return
-  j:: Return
-  k:: Return
-  l:: Return
   e:: ScrollDown()
+  y:: ScrollUp()
   d:: ScrollDown4()
+  ^r:: EnterWASDMode()
+  <#<!r:: EnterWASDMode()
   ; for windows explorer
 #If (NORMAL_MODE && WinActive("ahk_class CabinetWClass"))
   ^h:: Send {Left}
@@ -340,7 +345,8 @@ ScrollDown4() {
   <#<!d:: ScrollDown4()
   <#<!u:: ScrollUp4()
 #If (INSERT_MODE && INSERT_QUICK)
-  ^q:: EnterNormalMode()
+  ^f:: EnterNormalMode()
+  ^q:: EnterInsertMode()
 #If (NORMAL_QUICK)
   ; Intercept movement keys
   <#<!h:: Return
@@ -368,20 +374,20 @@ ScrollDown4() {
   ;<#<!^d ScrollDown4()
   ;<#<!^u ScrollUp4()
 #If (NORMAL_WASD)
-  <#<!x:: EnterInsertMode()
+  ^r:: ExitWASDMode()
+  <#<!r:: ExitWASDMode()
   w:: Return
   a:: Return
   s:: Return
   d:: Return
   e:: ScrollDown()
-  q:: ScrollUp()
+  +E:: ScrollDown4()
   Space:: ScrollDown4()
+  q:: ScrollUp()
+  +Q:: ScrollUp4()
   r:: MouseLeft()
   t:: MouseRight()
-  h:: JumpLeftEdge()
-  j:: JumpBottomEdge()
-  k:: JumpTopEdge()
-  l:: JumpRightEdge()
+  y:: MouseMiddle()
   m:: JumpMiddle()
 #If
 

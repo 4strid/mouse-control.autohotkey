@@ -1,6 +1,8 @@
 # vim\_mouse\_2.ahk
 AutoHotkey script with Vim bindings for controlling the mouse with the keyboard
 
+## This README is very much out of date. Until I have time to fix it, just look at the BINDINGS section of the script
+
 ## Modes
 Like Vim, vim\_mouse has Modes of input, with "Insert Mode" acting like a regular keyboard
 and "Normal Mode" intercepting keys to move the mouse instead.
