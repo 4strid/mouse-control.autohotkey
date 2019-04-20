@@ -24,7 +24,7 @@ To switch between modes use either `Win Alt Enter` or `Win Alt Space`
 - `Y` "yank" a window (reposition it) (press i to release)
 - `b` "back" mouse button
 - `n` "forward" mouse button
-- `^q,\`` other ways to enter Insert mode
+- `^q,``` another way to enter Insert mode
 
 ### Normal "Quick" Mode
 

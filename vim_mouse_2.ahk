@@ -275,8 +275,10 @@ ScrollDownMore() {
 #If (NORMAL_MODE)
   ; I hate not being able to press Escape
   ; Esc EnterInsertMode()
-  ; well, q isn't hurting anyone
+  ; well, ^q isn't hurting anyone
   ^q:: EnterInsertMode()
+  ; another option I tried that I'll just leave in
+  `:: EnterInsertMode()
   ; I think this is the winner
   <#<!Enter:: EnterInsertMode()
   <#<!Space:: EnterInsertMode()
