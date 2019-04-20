@@ -1,26 +1,30 @@
 #InstallKeybdHook
 
 ; vim_mouse_2.ahk
-; vim bindings to control the mouse with the keyboard
+; vim (and now also WASD!) bindings to control the mouse with the keyboard
 ; 
 ; Astrid Fesz-Nguyen
 ; 2019-04-14
 ;
-; NOTE THE README IS WAY OUT OF DATE, THIS FILE IS WHERE TO LOOK TO SEE WHAT DO
+; Last updated 2019-04-20
 
-global INSERT_MODE := true
-global INSERT_QUICK := true
+global INSERT_MODE := false
+global INSERT_QUICK := false
 global NORMAL_MODE := false
 global NORMAL_QUICK := false
-global NORMAL_WASD := false
+global WASD := false
 
 ; Drag takes care of this now
 ;global MAX_VELOCITY := 72
-global FORCE := 2.2
-global RESISTANCE := 0.96
+
+; mouse speed variables
+global FORCE := 2
+global RESISTANCE := 0.965
 
 global VELOCITY_X := 0
 global VELOCITY_Y := 0
+
+EnterNormalMode()
 
 Accelerate() {
   LEFT := 0
@@ -33,7 +37,7 @@ Accelerate() {
   UP := UP - GetKeyState("k", "P")
   RIGHT := RIGHT + GetKeyState("l", "P")
   
-  if (NORMAL_WASD) {
+  if (WASD) {
     UP := UP -  GetKeyState("w", "P")
     LEFT := LEFT - GetKeyState("a", "P")
     DOWN := DOWN + GetKeyState("s", "P")
@@ -41,15 +45,18 @@ Accelerate() {
   }
   
   alt_down := GetKeyState("Alt", "P")
-  win_down := GetKeyState("LWin", "P")
+  lwin_down := GetKeyState("LWin", "P")
+  rwin_down := GetKeyState("LWin", "P")
   
   If (NORMAL_QUICK) {
-    If (alt_down == 0 && win_down == 0) {
+    IF (WASD && alt_down == 0 && rwin_down == 0) {
+      EnterInsertMode()
+    } Else If (alt_down == 0 && lwin_down == 0) {
       EnterInsertMode()
     }
   }
   
-  If (INSERT_MODE) {
+  If (NORMAL_MODE == false) {
     VELOCITY_X := 0
     VELOCITY_Y := 0
     SetTimer,, Off
@@ -59,7 +66,7 @@ Accelerate() {
     VELOCITY_X := 0
   }
   Else If (LEFT + RIGHT == 0) {
-    VELOCITY_X := Round(VELOCITY_X ** 0.92 - 1)
+    VELOCITY_X := VELOCITY_X * 0.666
   }
   Else {
     VELOCITY_X := VELOCITY_X * RESISTANCE + FORCE * (LEFT + RIGHT)
@@ -69,7 +76,7 @@ Accelerate() {
     VELOCITY_Y := 0
   }
   Else If (UP + DOWN == 0) {
-    VELOCITY_Y := Round(VELOCITY_Y ** 0.92 - 1)
+    VELOCITY_Y := VELOCITY_Y * 0.666
   }
   Else {
     VELOCITY_Y := VELOCITY_Y * RESISTANCE + FORCE * (UP + DOWN)
@@ -84,11 +91,13 @@ Accelerate() {
 
 EnterNormalMode(quick:=false) {
   ;MsgBox, "Welcome to Normal Mode"
+  NORMAL_QUICK := quick
+
   If (NORMAL_MODE) {
     Return
   }
   msg := "NORMAL"
-  If (NORMAL_WASD) {
+  If (WASD) {
     msg := msg . " (WASD)"
   }
   If (quick) {
@@ -96,22 +105,25 @@ EnterNormalMode(quick:=false) {
   }
   ShowModePopup(msg)
   NORMAL_MODE := true
-  NORMAL_QUICK := quick
   INSERT_MODE := false
   INSERT_QUICK := false
 
   SetTimer, Accelerate, 16
 }
 
-EnterWASDMode() {
-  ShowModePopup("NORMAL (WASD)")
-  NORMAL_WASD := true
-  EnterNormalMode()
+EnterWASDMode(quick:=false) {
+  msg := "NORMAL (WASD)"
+  If (quick) {
+    msg := msg . " (QUICK)"
+  }
+  ShowModePopup(msg)
+  WASD := true
+  EnterNormalMode(quick)
 }
 
 ExitWASDMode() {
   ShowModePopup("NORMAL")
-  NORMAL_WASD := false
+  WASD := false
 }
 
 EnterInsertMode(quick:=false) {
@@ -125,7 +137,18 @@ EnterInsertMode(quick:=false) {
   INSERT_QUICK := quick
   NORMAL_MODE := false
   NORMAL_QUICK := false
-  NORMAL_WASD := false
+}
+
+ClickInsert() {
+  Click
+  EnterInsertMode(true)
+}
+
+DoubleClickInsert() {
+  Click
+  Sleep, 50
+  Click
+  EnterInsertMode(true)
 }
 
 ShowModePopup(msg) {
@@ -142,7 +165,6 @@ ClosePopup() {
 
 Drag(quick:=false) {
   Click, Down
-  EnterNormalMode(quick)
 }
 
 Yank(quick:=false) {
@@ -156,7 +178,6 @@ Yank(quick:=false) {
 
 RightDrag(quick:=false) {
   Click, Right, Down
-  EnterNormalMode(quick)
 }
 
 MouseLeft() {
@@ -172,51 +193,45 @@ MouseMiddle() {
 }
 
 ; TODO: When we have more monitors, set up H and L to use current screen as basis
+; hard to test when I only have the one
 
-JumpMiddle(quick:=false) {
-  EnterNormalMode(quick)
+JumpMiddle() {
   CoordMode, Mouse, Screen
   MouseMove, (A_ScreenWidth // 2), (A_ScreenHeight // 2)
 }
 
-JumpMiddle2(quick:=false) {
-  EnterNormalMode(quick)
+JumpMiddle2() {
   CoordMode, Mouse, Screen
   MouseMove, (A_ScreenWidth + A_ScreenWidth // 2), (A_ScreenHeight // 2)
 }
 
-JumpMiddle3(quick:=false) {
-  EnterNormalMode(quick)
+JumpMiddle3() {
   CoordMode, Mouse, Screen
   MouseMove, (A_ScreenWidth * 2 + A_ScreenWidth // 2), (A_ScreenHeight // 2)
 }
 
-JumpLeftEdge(quick:=false) {
-  EnterNormalMode(quick)
+JumpLeftEdge() {
   y := 0
   CoordMode, Mouse, Screen
   MouseGetPos,, y
   MouseMove, 2, y
 }
 
-JumpBottomEdge(quick:=false) {
-  EnterNormalMode(quick)
+JumpBottomEdge() {
   x := 0
   CoordMode, Mouse, Screen
   MouseGetPos, x
   MouseMove, x, (A_ScreenHeight - 0)
 }
 
-JumpTopEdge(quick:=false) {
-  EnterNormalMode(quick)
+JumpTopEdge() {
   x := 0
   CoordMode, Mouse, Screen
   MouseGetPos, x
   MouseMove, x, 0
 }
 
-JumpRightEdge(quick:=false) {
-  EnterNormalMode(quick)
+JumpRightEdge() {
   y := 0
   CoordMode, Mouse, Screen
   MouseGetPos,, y
@@ -239,7 +254,7 @@ ScrollDown() {
   Click, WheelDown
 }
 
-ScrollUp4() {
+ScrollUpMore() {
   Click, WheelUp
   Click, WheelUp
   Click, WheelUp
@@ -247,7 +262,7 @@ ScrollUp4() {
   Return
 }
 
-ScrollDown4() {
+ScrollDownMore() {
   Click, WheelDown
   Click, WheelDown
   Click, WheelDown
@@ -260,15 +275,28 @@ ScrollDown4() {
 #If (NORMAL_MODE)
   ; I hate not being able to press Escape
   ; Esc EnterInsertMode()
+  ; well, q isn't hurting anyone
   ^q:: EnterInsertMode()
-  ; for Vimium hotlinks
-  ^f:: EnterInsertMode(true)
+  ; I think this is the winner
+  <#<!Enter:: EnterInsertMode()
+  <#<!Space:: EnterInsertMode()
+  <#<!+I:: ClickInsert()
+  <#<!^i:: DoubleClickInsert()
+  ; passthru for Vimium hotlinks 
   ~f:: EnterInsertMode(true)
-  ; bind these in case win alt is still held down
+  ; passthru to common "search" hotkey
+  ~^f:: EnterInsertMode(true)
+  ; passthru for quick edits
+  ~Delete:: EnterInsertMode(true)
+  ~Backspace:: EnterInsertMode(true)
+  ; shift f to not pass thru
+  +F:: EnterInsertMode(true)
+  ; intercept movement keys
   h:: Return
   j:: Return
   k:: Return
   l:: Return
+  ; bind these in case win alt is still held down
   <#<!h:: Return
   <#<!j:: Return
   <#<!k:: Return
@@ -281,11 +309,9 @@ ScrollDown4() {
   i:: MouseLeft()
   ^i:: MouseLeft()
   +I:: MouseLeft()
-  <#<!i:: MouseLeft()
+  !i:: MouseLeft()
   o:: MouseRight()
-  <#<!o:: MouseRight()
   p:: MouseMiddle()
-  <#<!p:: MouseMiddle()
   ; do not conflict with y as in "scroll up"
   +Y:: Yank()
   v:: Drag()
@@ -294,25 +320,46 @@ ScrollDown4() {
   ^H:: JumpMiddle3()
   ^L:: JumpMiddle2()
   n:: MouseForward()
-  <#<!n:: MouseForward()
   b:: MouseBack()
-  <#<!b:: MouseBack()
   ; allow for modifier keys (or more importantly a lack of them) by lifting ctrl requirement for these hotkeys
-  u:: ScrollUp4()
+  u:: ScrollUpMore()
   0:: ScrollDown()
   9:: ScrollUp()
   ]:: ScrollDown()
   [:: ScrollUp()
-  +]:: ScrollDown4()
-  +[:: ScrollUp4()
+  +]:: ScrollDownMore()
+  +[:: ScrollUpMore()
+
+  ; rebind everything (except i) in case you don't release win alt upon entering normal mode
+  <#<!i:: MouseLeft()
+  <#<!o:: MouseRight()
+  <#<!p:: MouseMiddle()
+  <#<!n:: MouseForward()
+  <#<!b:: MouseBack()
+  <#<!+m:: JumpMiddle()
+  <#<!^h:: JumpLeftEdge()
+  <#<!^j:: JumpBottomEdge()
+  <#<!^k:: JumpTopEdge()
+  <#<!^l:: JumpRightEdge()
+  <#<!v:: Drag()
+  <#<!+V:: RightDrag()
+  <#<!e:: ScrollDown()
+  <#<!y:: ScrollUp()
+  <#<!d:: ScrollDownMore()
+  <#<!u:: ScrollUpMore()
+  <#<!0:: ScrollDown()
+  <#<!9:: ScrollUp()
 ; Intersecting hotkeys
-#If (NORMAL_MODE && NORMAL_WASD == false)
-  q:: EnterInsertMode()
+#If (NORMAL_MODE && WASD == false)
+  <#<!r:: EnterWASDMode()
   e:: ScrollDown()
   y:: ScrollUp()
-  d:: ScrollDown4()
-  ^r:: EnterWASDMode()
-  <#<!r:: EnterWASDMode()
+  d:: ScrollDownMore()
+  ; Normal (Quick/WASD) Mode
+  !>#w:: EnterWASDMode(true)
+  !>#a:: EnterWASDMode(true)
+  !>#s:: EnterWASDMode(true)
+  !>#d:: EnterWASDMode(true)
   ; for windows explorer
 #If (NORMAL_MODE && WinActive("ahk_class CabinetWClass"))
   ^h:: Send {Left}
@@ -320,71 +367,59 @@ ScrollDown4() {
   ^k:: Send {Up}
   ^l:: Send {Right}
 #If (INSERT_MODE)
-  <#<!i:: EnterNormalMode()
-  <#<!r:: EnterWASDMode()
+  ; we'll see which one we like, or probably just leave both
+  <#<!Enter:: EnterNormalMode()
+  <#<!Space:: EnterNormalMode()
   ; Normal (Quick) Mode
   <#<!h:: EnterNormalMode(true)
   <#<!j:: EnterNormalMode(true)
   <#<!k:: EnterNormalMode(true)
   <#<!l:: EnterNormalMode(true)
-  <#<!+M:: JumpMiddle(true)
-  <#<!+H:: JumpLeftEdge(true)
-  <#<!+J:: JumpBottomEdge(true)
-  <#<!+K:: JumpTopEdge(true)
-  <#<!+L:: JumpRightEdge(true)
+  ; Normal (Quick/WASD) Mode
+  !>#w:: EnterWASDMode(true)
+  !>#a:: EnterWASDMode(true)
+  !>#s:: EnterWASDMode(true)
+  !>#d:: EnterWASDMode(true)
   ; Immediately issue commands
+  <#<!+M:: JumpMiddle()
+  <#<!+H:: JumpLeftEdge()
+  <#<!+J:: JumpBottomEdge()
+  <#<!+K:: JumpTopEdge()
+  <#<!+L:: JumpRightEdge()
+  <#<!i:: MouseLeft()
   <#<!o:: MouseRight()
   <#<!p:: MouseMiddle()
+  <#<!n:: MouseForward()
+  <#<!b:: MouseBack()
   <#<!v:: Drag()
   <#<!+V:: RightDrag()
   <#<!+Y:: Yank()
-  <#<!n:: MouseForward()
-  <#<!b:: MouseBack()
   <#<!e:: ScrollDown()
   <#<!y:: ScrollUp()
-  <#<!d:: ScrollDown4()
-  <#<!u:: ScrollUp4()
+  <#<!d:: ScrollDownMore()
+  <#<!u:: ScrollUpMore()
+  <#<!0:: ScrollDown()
+  <#<!9:: ScrollUp()
 #If (INSERT_MODE && INSERT_QUICK)
   ^f:: EnterNormalMode()
-  ^q:: EnterInsertMode()
-#If (NORMAL_QUICK)
-  ; Intercept movement keys
-  <#<!h:: Return
-  <#<!j:: Return
-  <#<!k:: Return
-  <#<!l:: Return
-  ; commands
-  <#<!i:: MouseLeft()
-  <#<!o:: MouseRight()
-  <#<!p:: MouseRight()
-  <#<!+m:: JumpMiddle(true)
-  ; FIXME: why are these a little glitchy?
-  <#<!+H:: JumpLeftEdge(true)
-  <#<!+J:: JumpBottomEdge(true)
-  <#<!+K:: JumpTopEdge(true)
-  <#<!+L:: JumpRightEdge(true)
-  <#<!v:: Drag(true)
-  <#<!+V:: RightDrag(true)
-  <#<!y:: Yank(true)
-  <#<!n:: MouseForward()
-  <#<!b:: MouseBack()
-  ; weird interactions with modifier keys, just go into insert mode if you want to scroll
-  ;<#<!^e ScrollDown()
-  ;<#<!^y ScrollUp()
-  ;<#<!^d ScrollDown4()
-  ;<#<!^u ScrollUp4()
-#If (NORMAL_WASD)
-  ^r:: ExitWASDMode()
+  ~Enter:: EnterNormalMode()
+#If (NORMAL_MODE && WASD)
   <#<!r:: ExitWASDMode()
+  ; Intercept movement keys
   w:: Return
   a:: Return
   s:: Return
   d:: Return
+  ; Intercept WASD/Quick movement keys
+  !>#w:: Return
+  !>#a:: Return
+  !>#s:: Return
+  !>#d:: Return
   e:: ScrollDown()
-  +E:: ScrollDown4()
-  Space:: ScrollDown4()
+  +E:: ScrollDownMore()
+  Space:: ScrollDownMore()
   q:: ScrollUp()
-  +Q:: ScrollUp4()
+  +Q:: ScrollUpMore()
   r:: MouseLeft()
   t:: MouseRight()
   y:: MouseMiddle()
@@ -393,6 +428,5 @@ ScrollDown4() {
 
 ; FUTURE CONSIDERATIONS
 ; AwaitKey function for vimesque multi keystroke commands (gg, yy, 2M, etc)
-; Better interop with Vimium for Chrome
-; "Marks" for remembering and restoring specific windows (needs AwaitKey)
+; "Marks" for remembering and restoring mouse positions (needs AwaitKey)
 ; Whatever you can think of! Github issues and pull requests welcome
