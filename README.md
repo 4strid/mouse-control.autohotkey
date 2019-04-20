@@ -24,7 +24,7 @@ To switch between modes use either `Win Alt Enter` or `Win Alt Space`
 - `Y` "yank" a window (reposition it) (press i to release)
 - `b` "back" mouse button
 - `n` "forward" mouse button
-- `^q,``` another way to enter Insert mode
+- ``^q,` `` other ways to enter Insert mode
 
 ### Normal "Quick" Mode
 
@@ -54,7 +54,7 @@ Note that this necessarily unbinds `d` `e` and `y` from their non WASD bindings
 
 Otherwise, it is just a variant of Normal mode and the rest of the commands are available.
 
-Normal "Quick" "WASD" mode is entered from Insert mode with `_Right_ Win Alt wasd`
+Normal "Quick" "WASD" mode is entered from Insert mode with `Right! Win Alt wasd`
 
 ### Insert mode
 
