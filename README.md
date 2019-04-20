@@ -24,7 +24,7 @@ To switch between modes use either `Win Alt Enter` or `Win Alt Space`
 - `Y` "yank" a window (reposition it) (press i to release)
 - `b` "back" mouse button
 - `n` "forward" mouse button
-- `^q,``` another way to enter Insert mode
+- ``^q,` `` other ways to enter Insert mode
 
 ### Normal "Quick" Mode
 
@@ -54,7 +54,7 @@ Note that this necessarily unbinds `d` `e` and `y` from their non WASD bindings
 
 Otherwise, it is just a variant of Normal mode and the rest of the commands are available.
 
-Normal "Quick" "WASD" mode is entered from Insert mode with `_Right_ Win Alt wasd`
+Normal "Quick" "WASD" mode is entered from Insert mode with `Right! Win Alt wasd`
 
 ### Insert mode
 
@@ -69,11 +69,11 @@ Great for typing into an address bar or a form field. `Enter` exits Insert "Quic
 the Enter keypress. `Ctrl F` exits without sending additional keys.
 
 From normal mode,
-`f` - Type f then enter Insert mode (for Vimium hotlink mode)
-`^f` - Type ctrl f then enter quick Insert mode (ctrl f is a common "search" keybind)
-`F` - Enter quick Insert mode without sending any keys
-`Delete` - Type Delete and enter quick Insert mode (for quick finxes)
-`Backspace` - Type Backspace and enter quick Insert mode (same idea)
+- `f` Type f then enter Insert mode (for Vimium hotlinks)
+- `^f` Type ctrl f then enter quick Insert mode (ctrl f is a common "search" keybind)
+- `F` Enter quick Insert mode without sending any keys
+- `Delete` Type Delete and enter quick Insert mode (for quick finxes)
+- `Backspace` Type Backspace and enter quick Insert mode (same idea)
 
 ## Last Remarks
 
