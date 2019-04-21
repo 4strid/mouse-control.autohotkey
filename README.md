@@ -24,7 +24,7 @@ To switch between modes use either `Win Alt Enter` or `Win Alt Space`
 - `Y` "yank" a window (reposition it) (press i to release)
 - `b` "back" mouse button
 - `n` "forward" mouse button
-- ``^q,` `` other ways to enter Insert mode
+- ``^q,` Insert`` other ways to enter Insert mode
 
 ### Normal "Quick" Mode
 
@@ -61,15 +61,15 @@ Normal "Quick" "WASD" mode is entered from Insert mode with `Right! Win Alt wasd
 Most commands from Normal mode are also available in Insert mode, but like Normal Quick mode
 `Win Alt` must be held down to use them.
 
-Again, `Win Alt Space` and `Win Alt Enter` switch you back into Normal mode
+`Win Alt Space` `Win Alt Enter` and `Home` put you back in Normal mode.
 
 ### Insert "Quick" Mode
 To quickly edit some text then return to Normal mode, a "quick" mode is also available for Insert.
 Great for typing into an address bar or a form field. `Enter` exits Insert "Quick" Mode and also sends
-the Enter keypress. `Escape` and `Ctrl F` exit without sending additional keys.
+the Enter keypress. `Ctrl f` and `Ctrl c` exit without sending additional keys.
 
 From normal mode,
-- `:` Enter quick Insert mode
+- `c,:` Enter quick Insert mode
 - `f` Type f then enter quick Insert mode (for Vimium hotlinks)
 - `^f` Type ctrl f then enter quick Insert mode (ctrl f is a common "search" keybind)
 - `F` Enter quick Insert mode with F key without sending any keys
