@@ -275,13 +275,16 @@ ScrollDownMore() {
 #If (NORMAL_MODE)
   ; I hate not being able to press Escape
   ; Esc EnterInsertMode()
+  ; I think this is the winner
+  <#<!Enter:: EnterInsertMode()
+  <#<!Space:: EnterInsertMode()
   ; well, ^q isn't hurting anyone
   ^q:: EnterInsertMode()
   ; another option I tried that I'll just leave in
   `:: EnterInsertMode()
-  ; I think this is the winner
-  <#<!Enter:: EnterInsertMode()
-  <#<!Space:: EnterInsertMode()
+  ; what the hell, have another
+  Insert:: EnterInsertMode()
+  ; these don't work super well (hence omission from README) but are nice when they do
   <#<!+I:: ClickInsert()
   <#<!^i:: DoubleClickInsert()
   ; passthru for Vimium hotlinks 
@@ -291,8 +294,10 @@ ScrollDownMore() {
   ; passthru for quick edits
   ~Delete:: EnterInsertMode(true)
   ~Backspace:: EnterInsertMode(true)
-  ; shift f to not pass thru
+  ; do not pass thru
+  +;:: EnterInsertMode(true)
   +F:: EnterInsertMode(true)
+  c:: EnterInsertMode(true)
   ; intercept movement keys
   h:: Return
   j:: Return
@@ -372,6 +377,7 @@ ScrollDownMore() {
   ; we'll see which one we like, or probably just leave both
   <#<!Enter:: EnterNormalMode()
   <#<!Space:: EnterNormalMode()
+  Home:: EnterNormalMode()
   ; Normal (Quick) Mode
   <#<!h:: EnterNormalMode(true)
   <#<!j:: EnterNormalMode(true)
@@ -405,6 +411,7 @@ ScrollDownMore() {
 #If (INSERT_MODE && INSERT_QUICK)
   ^f:: EnterNormalMode()
   ~Enter:: EnterNormalMode()
+  ~^c:: EnterNormalMode()
 #If (NORMAL_MODE && WASD)
   <#<!r:: ExitWASDMode()
   ; Intercept movement keys

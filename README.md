@@ -66,12 +66,13 @@ Again, `Win Alt Space` and `Win Alt Enter` switch you back into Normal mode
 ### Insert "Quick" Mode
 To quickly edit some text then return to Normal mode, a "quick" mode is also available for Insert.
 Great for typing into an address bar or a form field. `Enter` exits Insert "Quick" Mode and also sends
-the Enter keypress. `Ctrl F` exits without sending additional keys.
+the Enter keypress. `Escape` and `Ctrl F` exit without sending additional keys.
 
 From normal mode,
-- `f` Type f then enter Insert mode (for Vimium hotlinks)
+- `:` Enter quick Insert mode
+- `f` Type f then enter quick Insert mode (for Vimium hotlinks)
 - `^f` Type ctrl f then enter quick Insert mode (ctrl f is a common "search" keybind)
-- `F` Enter quick Insert mode without sending any keys
+- `F` Enter quick Insert mode with F key without sending any keys
 - `Delete` Type Delete and enter quick Insert mode (for quick finxes)
 - `Backspace` Type Backspace and enter quick Insert mode (same idea)
 
