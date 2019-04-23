@@ -7,6 +7,10 @@ and "Normal Mode" intercepting keys to move and control the mouse instead.
 
 To switch between modes use either `Win Alt Enter` or `Win Alt Space`
 
+`Insert` in Normal mode takes you to Insert mode and `Home` in Insert mode takes you to
+Normal mode. Useful when you know what mode you *want* to be in, but not which one you're in.
+You can access normal Home and Insert behavior with `Shift Home/Insert` when they're otherwise a hotkey.
+
 ### Normal Mode
 
 - `hjkl` move the mouse
@@ -24,7 +28,7 @@ To switch between modes use either `Win Alt Enter` or `Win Alt Space`
 - `Y` "yank" a window (reposition it) (press i to release)
 - `b` "back" mouse button
 - `n` "forward" mouse button
-- ``^q,` Insert`` other ways to enter Insert mode
+- ``^q,`,Insert`` other ways to enter Insert mode
 
 ### Normal "Quick" Mode
 
@@ -52,9 +56,10 @@ and out of WASD mode with `Win Alt r`
 
 Note that this necessarily unbinds `d` `e` and `y` from their non WASD bindings
 
-Otherwise, it is just a variant of Normal mode and the rest of the commands are available.
+Otherwise, it is just a variant of Normal mode and the rest of the hotkeys remain unchanged.
 
-Normal "Quick" "WASD" mode is entered from Insert mode with `Right! Win Alt wasd`
+Normal "Quick" "WASD" mode is entered from Insert mode with `Right(!) Win Alt <wasd>` Note that
+it's Right Win instead of the usual Left Win.
 
 ### Insert mode
 
@@ -65,16 +70,25 @@ Most commands from Normal mode are also available in Insert mode, but like Norma
 
 ### Insert "Quick" Mode
 To quickly edit some text then return to Normal mode, a "quick" mode is also available for Insert.
-Great for typing into an address bar or a form field. `Enter` exits Insert "Quick" Mode and also sends
-the Enter keypress. `Ctrl f` and `Ctrl c` exit without sending additional keys.
+Great for typing into an address bar or a form field.
 
-From normal mode,
+##### Entering
+From Normal mode,
 - `c,:` Enter quick Insert mode
 - `f` Type f then enter quick Insert mode (for Vimium hotlinks)
 - `^f` Type ctrl f then enter quick Insert mode (ctrl f is a common "search" keybind)
 - `F` Enter quick Insert mode with F key without sending any keys
 - `Delete` Type Delete and enter quick Insert mode (for quick finxes)
 - `Backspace` Type Backspace and enter quick Insert mode (same idea)
+
+##### Exiting
+From quick Insert mode:
+- `^f` enter Normal mode
+- `^c` send ctrl c then enter Normal mode
+- `Enter` send Enter then enter Normal mode
+
+"Quick" mode is just a variant of Insert mode so the same hotkeys are available behind
+Win Alt, and `Win Alt Space/Enter` and `Home` will send you back to Normal mode.
 
 ## Last Remarks
 

@@ -284,6 +284,7 @@ ScrollDownMore() {
   `:: EnterInsertMode()
   ; what the hell, have another
   Insert:: EnterInsertMode()
+  +Insert:: Send, {Insert}
   ; these don't work super well (hence omission from README) but are nice when they do
   <#<!+I:: ClickInsert()
   <#<!^i:: DoubleClickInsert()
@@ -378,6 +379,7 @@ ScrollDownMore() {
   <#<!Enter:: EnterNormalMode()
   <#<!Space:: EnterNormalMode()
   Home:: EnterNormalMode()
+  +Home:: Send, {Home}
   ; Normal (Quick) Mode
   <#<!h:: EnterNormalMode(true)
   <#<!j:: EnterNormalMode(true)
@@ -410,7 +412,9 @@ ScrollDownMore() {
   <#<!9:: ScrollUp()
 #If (INSERT_MODE && INSERT_QUICK)
   ^f:: EnterNormalMode()
+  ; send input to whatever you were typing in
   ~Enter:: EnterNormalMode()
+  ; copy and exit
   ~^c:: EnterNormalMode()
 #If (NORMAL_MODE && WASD)
   <#<!r:: ExitWASDMode()
