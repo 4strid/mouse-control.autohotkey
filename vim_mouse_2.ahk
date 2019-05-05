@@ -297,8 +297,7 @@ ScrollDownMore() {
   ~Backspace:: EnterInsertMode(true)
   ; do not pass thru
   +;:: EnterInsertMode(true)
-  +F:: EnterInsertMode(true)
-  c:: EnterInsertMode(true)
+  Capslock:: EnterInsertMode(true)
   ; intercept movement keys
   h:: Return
   j:: Return
@@ -325,8 +324,8 @@ ScrollDownMore() {
   v:: Drag()
   +V:: RightDrag()
   +M:: JumpMiddle()
-  ^H:: JumpMiddle3()
-  ^L:: JumpMiddle2()
+  +,:: JumpMiddle2()
+  +.:: JumpMiddle3()
   n:: MouseForward()
   b:: MouseBack()
   ; allow for modifier keys (or more importantly a lack of them) by lifting ctrl requirement for these hotkeys
@@ -411,11 +410,11 @@ ScrollDownMore() {
   <#<!0:: ScrollDown()
   <#<!9:: ScrollUp()
 #If (INSERT_MODE && INSERT_QUICK)
-  ^f:: EnterNormalMode()
   ; send input to whatever you were typing in
   ~Enter:: EnterNormalMode()
-  ; copy and exit
-  ~^c:: EnterNormalMode()
+  ^c:: EnterNormalMode()
+  Capslock:: EnterNormalMode()
+  Insert:: EnterInsertMode(false)
 #If (NORMAL_MODE && WASD)
   <#<!r:: ExitWASDMode()
   ; Intercept movement keys
@@ -434,9 +433,10 @@ ScrollDownMore() {
   q:: ScrollUp()
   +Q:: ScrollUpMore()
   r:: MouseLeft()
+  ^r:: MouseLeft()
+  +R:: MouseLeft()
   t:: MouseRight()
   y:: MouseMiddle()
-  m:: JumpMiddle()
 #If
 
 ; FUTURE CONSIDERATIONS

@@ -34,15 +34,17 @@ You can access normal Home and Insert behavior with `Shift Home/Insert` when the
 
 There also exists a "quick" mode which allows you to issue mouse commands then immediately
 return to Insert Mode. This is entered with `Win Alt hjkl` from Insert Mode and exits when
-the Win and Alt keys are released
+the Win and Alt keys are released.
 
 You can basically do the same commands as in Normal Mode, though you'll need to hold down
-Win Alt to stay in Normal Quick mode
+Win Alt to stay in Normal Quick mode.
 
 ### Normal "WASD" Mode
 
 You can also use the WASD keys if they're more natural to you than vim movement keys. Switch into
 and out of WASD mode with `Win Alt r`
+
+WASD mode persists through changes into and out of Insert mode.
 
 - `wasd` move the mouse
 - `r` left click
@@ -54,7 +56,7 @@ and out of WASD mode with `Win Alt r`
 - `Q` scroll up faster
 - `Space` scroll down faster
 
-Note that this necessarily unbinds `d` `e` and `y` from their non WASD bindings
+Note that this necessarily unbinds `d` `e` and `y` from their non WASD bindings.
 
 Otherwise, it is just a variant of Normal mode and the rest of the hotkeys remain unchanged.
 
@@ -70,25 +72,31 @@ Most commands from Normal mode are also available in Insert mode, but like Norma
 
 ### Insert "Quick" Mode
 To quickly edit some text then return to Normal mode, a "quick" mode is also available for Insert.
-Great for typing into an address bar or a form field.
+Great for typing into an address bar or a form field. `Capslock` toggles between Normal and quick
+Insert mode.
 
 ##### Entering
-From Normal mode,
-- `c,:` Enter quick Insert mode
-- `f` Type f then enter quick Insert mode (for Vimium hotlinks)
-- `^f` Type ctrl f then enter quick Insert mode (ctrl f is a common "search" keybind)
-- `F` Enter quick Insert mode with F key without sending any keys
-- `Delete` Type Delete and enter quick Insert mode (for quick finxes)
-- `Backspace` Type Backspace and enter quick Insert mode (same idea)
+From Normal mode:
+- `:` enter
+- `Capslock` toggle
+- `f` send f then enter (for Vimium hotlinks)
+- `^f` send ctrl f then enter (commonly "search")
+- `^t` send ctrl t then enter (new tab in the browser)
+- `Delete` send Delete then enter (for quick fixes)
+- `Backspace` send Backspace then enter (for quick fixes)
 
 ##### Exiting
 From quick Insert mode:
-- `^f` enter Normal mode
-- `^c` send ctrl c then enter Normal mode
-- `Enter` send Enter then enter Normal mode
+- `^c` exit to Normal Mode
+- `Enter` send Enter then exit to Normal mode
+- `Capslock` toggle
 
+##### Hotkeys
 "Quick" mode is just a variant of Insert mode so the same hotkeys are available behind
-Win Alt, and `Win Alt Space/Enter` and `Home` will send you back to Normal mode.
+Win Alt.
+
+`Home` enters Normal mode
+`Insert` enters regular (persistent) Insert mode
 
 ## Last Remarks
 
@@ -106,7 +114,7 @@ the expected effect so I took it out.
 
 _"How come I can't make my own keybindings >:I"_
 
-I like these ones. You can fork the repo or make a pull request if you want to set up an ini file :^)
+I like these ones. You can fork the repo or make a pull request if you want to set up managing an ini file :^)
 
 #### The mouse moves too fast! (or too slow)
 
