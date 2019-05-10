@@ -44,9 +44,11 @@ Win Alt to stay in Normal Quick mode.
 You can also use the WASD keys if they're more natural to you than vim movement keys. Switch into
 and out of WASD mode with `Win Alt r`
 
-WASD mode persists through changes into and out of Insert mode.
+WASD mode is now the default for Normal Mode.
 
 - `wasd` move the mouse
+- `WASD` jump to edges of the screen
+- `C` jump to center the screen
 - `r` left click
 - `t` right click
 - `y` middle click

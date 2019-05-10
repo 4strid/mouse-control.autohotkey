@@ -12,14 +12,14 @@ global INSERT_MODE := false
 global INSERT_QUICK := false
 global NORMAL_MODE := false
 global NORMAL_QUICK := false
-global WASD := false
+global WASD := true
 
 ; Drag takes care of this now
 ;global MAX_VELOCITY := 72
 
 ; mouse speed variables
-global FORCE := 2
-global RESISTANCE := 0.965
+global FORCE := 1.8
+global RESISTANCE := 0.982
 
 global VELOCITY_X := 0
 global VELOCITY_Y := 0
@@ -422,6 +422,11 @@ ScrollDownMore() {
   a:: Return
   s:: Return
   d:: Return
+  +C:: JumpMiddle()
+  +W:: JumpTopEdge()
+  +A:: JumpLeftEdge()
+  +S:: JumpBottomEdge()
+  +D:: JumpRightEdge()
   ; Intercept WASD/Quick movement keys
   !>#w:: Return
   !>#a:: Return
