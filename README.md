@@ -30,15 +30,6 @@ You can access normal Home and Insert behavior with `Shift Home/Insert` when the
 - `n` "forward" mouse button
 - ``^q,`,Insert`` other ways to enter Insert mode
 
-### Normal "Quick" Mode
-
-There also exists a "quick" mode which allows you to issue mouse commands then immediately
-return to Insert Mode. This is entered with `Win Alt hjkl` from Insert Mode and exits when
-the Win and Alt keys are released.
-
-You can basically do the same commands as in Normal Mode, though you'll need to hold down
-Win Alt to stay in Normal Quick mode.
-
 ### Normal "WASD" Mode
 
 You can also use the WASD keys if they're more natural to you than vim movement keys. Switch into
@@ -62,15 +53,14 @@ Note that this necessarily unbinds `d` `e` and `y` from their non WASD bindings.
 
 Otherwise, it is just a variant of Normal mode and the rest of the hotkeys remain unchanged.
 
-Normal "Quick" "WASD" mode is entered from Insert mode with `Right(!) Win Alt <wasd>` Note that
-it's Right Win instead of the usual Left Win.
-
 ### Insert mode
 
-Most commands from Normal mode are also available in Insert mode, but like Normal Quick mode
-`Win Alt` must be held down to use them.
-
 `Win Alt Space` `Win Alt Enter` and `Home` put you back in Normal mode.
+
+### Normal "Quick" Mode
+If you're in persistent Insert Mode and just need the mouse keys for a second, you can hold
+down Capslock to enter Normal "Quick" Mode, which has all the same hotkeys as Normal mode and
+ends when Capslock is released.
 
 ### Insert "Quick" Mode
 To quickly edit some text then return to Normal mode, a "quick" mode is also available for Insert.
@@ -92,10 +82,6 @@ From quick Insert mode:
 - `^c` exit to Normal Mode
 - `Enter` send Enter then exit to Normal mode
 - `Capslock` toggle
-
-##### Hotkeys
-"Quick" mode is just a variant of Insert mode so the same hotkeys are available behind
-Win Alt.
 
 `Home` enters Normal mode
 `Insert` enters regular (persistent) Insert mode

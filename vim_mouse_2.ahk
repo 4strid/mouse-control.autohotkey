@@ -26,7 +26,19 @@ global VELOCITY_Y := 0
 
 EnterNormalMode()
 
-Accelerate() {
+Accelerate(velocity, pos, neg) {
+  If (pos == 0 && neg == 0) {
+    Return 0
+  }
+  Else If (pos + neg == 0) {
+    Return velocity * 0.666
+  }
+  Else {
+    Return velocity * RESISTANCE + FORCE * (pos + neg)
+  }
+}
+
+MoveCursor() {
   LEFT := 0
   DOWN := 0
   UP := 0
@@ -44,14 +56,9 @@ Accelerate() {
     RIGHT := RIGHT + GetKeyState("d", "P")
   }
   
-  alt_down := GetKeyState("Alt", "P")
-  lwin_down := GetKeyState("LWin", "P")
-  rwin_down := GetKeyState("LWin", "P")
-  
   If (NORMAL_QUICK) {
-    IF (WASD && alt_down == 0 && rwin_down == 0) {
-      EnterInsertMode()
-    } Else If (alt_down == 0 && lwin_down == 0) {
+    caps_down := GetKeyState("Capslock", "P")
+    IF (caps_down == 0) {
       EnterInsertMode()
     }
   }
@@ -62,40 +69,22 @@ Accelerate() {
     SetTimer,, Off
   }
   
-  If (LEFT == 0 && RIGHT == 0) {
-    VELOCITY_X := 0
-  }
-  Else If (LEFT + RIGHT == 0) {
-    VELOCITY_X := VELOCITY_X * 0.666
-  }
-  Else {
-    VELOCITY_X := VELOCITY_X * RESISTANCE + FORCE * (LEFT + RIGHT)
-  }
-  
-  If (UP == 0 && DOWN == 0) {
-    VELOCITY_Y := 0
-  }
-  Else If (UP + DOWN == 0) {
-    VELOCITY_Y := VELOCITY_Y * 0.666
-  }
-  Else {
-    VELOCITY_Y := VELOCITY_Y * RESISTANCE + FORCE * (UP + DOWN)
-  }
-  ;MsgBox, %_MODE%
+  VELOCITY_X := Accelerate(VELOCITY_X, LEFT, RIGHT)
+  VELOCITY_Y := Accelerate(VELOCITY_Y, UP, DOWN)
+
+  MouseMove, %VELOCITY_X%, %VELOCITY_Y%, 0, R
+
+  ;MsgBox, %NORMAL_MODE%
   ;msg1 := "h " . LEFT . " j  " . DOWN . " k " . UP . " l " . RIGHT
   ;MsgBox, %msg1%
   ;msg2 := "Moving " . VELOCITY_X . " " . VELOCITY_Y
   ;MsgBox, %msg2%
-  MouseMove, %VELOCITY_X%, %VELOCITY_Y%, 0, R
 }
 
 EnterNormalMode(quick:=false) {
   ;MsgBox, "Welcome to Normal Mode"
   NORMAL_QUICK := quick
 
-  If (NORMAL_MODE) {
-    Return
-  }
   msg := "NORMAL"
   If (WASD) {
     msg := msg . " (WASD)"
@@ -104,11 +93,14 @@ EnterNormalMode(quick:=false) {
     msg := msg . " (QUICK)"
   }
   ShowModePopup(msg)
+  If (NORMAL_MODE) {
+    Return
+  }
   NORMAL_MODE := true
   INSERT_MODE := false
   INSERT_QUICK := false
 
-  SetTimer, Accelerate, 16
+  SetTimer, MoveCursor, 16
 }
 
 EnterWASDMode(quick:=false) {
@@ -139,16 +131,16 @@ EnterInsertMode(quick:=false) {
   NORMAL_QUICK := false
 }
 
-ClickInsert() {
+ClickInsert(quick:=true) {
   Click
-  EnterInsertMode(true)
+  EnterInsertMode(quick)
 }
 
-DoubleClickInsert() {
+DoubleClickInsert(quick:=true) {
   Click
   Sleep, 50
   Click
-  EnterInsertMode(true)
+  EnterInsertMode(quick)
 }
 
 ShowModePopup(msg) {
@@ -163,20 +155,20 @@ ClosePopup() {
   Progress, Off
 }
 
-Drag(quick:=false) {
+Drag() {
   Click, Down
 }
 
-Yank(quick:=false) {
+Yank() {
   width := 0
   WinGetPos,,,width,,A
   center := width / 2
   ;MsgBox, Hello %width% %center%
   MouseMove, Center, 10
-  Drag(quick)
+  Drag()
 }
 
-RightDrag(quick:=false) {
+RightDrag() {
   Click, Right, Down
 }
 
@@ -275,19 +267,18 @@ ScrollDownMore() {
 #If (NORMAL_MODE)
   ; I hate not being able to press Escape
   ; Esc EnterInsertMode()
-  ; I think this is the winner
-  <#<!Enter:: EnterInsertMode()
-  <#<!Space:: EnterInsertMode()
-  ; well, ^q isn't hurting anyone
-  ^q:: EnterInsertMode()
-  ; another option I tried that I'll just leave in
-  `:: EnterInsertMode()
-  ; what the hell, have another
+  ; 
+  ; WINNERS: Home and Insert. They feel right. They feel good.
   Insert:: EnterInsertMode()
   +Insert:: Send, {Insert}
-  ; these don't work super well (hence omission from README) but are nice when they do
-  <#<!+I:: ClickInsert()
-  <#<!^i:: DoubleClickInsert()
+  ; Honorable mentions
+  <#<!Enter:: EnterInsertMode()
+  <#<!Space:: EnterInsertMode()
+  ; Many paths to Quick Insert
+  `:: ClickInsert()
+  +`:: ClickInsert(false)
+  +S:: DoubleClickInsert()
+  ; what the hell, have another
   ; passthru for Vimium hotlinks 
   ~f:: EnterInsertMode(true)
   ; passthru to common "search" hotkey
@@ -297,17 +288,11 @@ ScrollDownMore() {
   ~Backspace:: EnterInsertMode(true)
   ; do not pass thru
   +;:: EnterInsertMode(true)
-  Capslock:: EnterInsertMode(true)
   ; intercept movement keys
   h:: Return
   j:: Return
   k:: Return
   l:: Return
-  ; bind these in case win alt is still held down
-  <#<!h:: Return
-  <#<!j:: Return
-  <#<!k:: Return
-  <#<!l:: Return
   +H:: JumpLeftEdge()
   +J:: JumpBottomEdge()
   +K:: JumpTopEdge()
@@ -322,7 +307,7 @@ ScrollDownMore() {
   ; do not conflict with y as in "scroll up"
   +Y:: Yank()
   v:: Drag()
-  +V:: RightDrag()
+  z:: RightDrag()
   +M:: JumpMiddle()
   +,:: JumpMiddle2()
   +.:: JumpMiddle3()
@@ -336,37 +321,21 @@ ScrollDownMore() {
   [:: ScrollUp()
   +]:: ScrollDownMore()
   +[:: ScrollUpMore()
-
-  ; rebind everything (except i) in case you don't release win alt upon entering normal mode
-  <#<!i:: MouseLeft()
-  <#<!o:: MouseRight()
-  <#<!p:: MouseMiddle()
-  <#<!n:: MouseForward()
-  <#<!b:: MouseBack()
-  <#<!+m:: JumpMiddle()
-  <#<!^h:: JumpLeftEdge()
-  <#<!^j:: JumpBottomEdge()
-  <#<!^k:: JumpTopEdge()
-  <#<!^l:: JumpRightEdge()
-  <#<!v:: Drag()
-  <#<!+V:: RightDrag()
-  <#<!e:: ScrollDown()
-  <#<!y:: ScrollUp()
-  <#<!d:: ScrollDownMore()
-  <#<!u:: ScrollUpMore()
-  <#<!0:: ScrollDown()
-  <#<!9:: ScrollUp()
-; Intersecting hotkeys
+; Addl Vim hotkeys that conflict with WASD mode
+#If (NORMAL_MODE && NORMAL_QUICK == false)
+  Capslock:: EnterInsertMode(true)
 #If (NORMAL_MODE && WASD == false)
   <#<!r:: EnterWASDMode()
   e:: ScrollDown()
   y:: ScrollUp()
   d:: ScrollDownMore()
-  ; Normal (Quick/WASD) Mode
-  !>#w:: EnterWASDMode(true)
-  !>#a:: EnterWASDMode(true)
-  !>#s:: EnterWASDMode(true)
-  !>#d:: EnterWASDMode(true)
+; No shift requirements in normal quick mode
+#If (NORMAL_MODE && NORMAL_QUICK)
+  Capslock:: Return
+  m:: JumpMiddle()
+  ,:: JumpMiddle2()
+  .:: JumpMiddle3()
+  y:: Yank()
   ; for windows explorer
 #If (NORMAL_MODE && WinActive("ahk_class CabinetWClass"))
   ^h:: Send {Left}
@@ -374,41 +343,15 @@ ScrollDownMore() {
   ^k:: Send {Up}
   ^l:: Send {Right}
 #If (INSERT_MODE)
+  Home:: EnterNormalMode()
+  +Home:: Send, {Home}
   ; we'll see which one we like, or probably just leave both
   <#<!Enter:: EnterNormalMode()
   <#<!Space:: EnterNormalMode()
-  Home:: EnterNormalMode()
-  +Home:: Send, {Home}
   ; Normal (Quick) Mode
-  <#<!h:: EnterNormalMode(true)
-  <#<!j:: EnterNormalMode(true)
-  <#<!k:: EnterNormalMode(true)
-  <#<!l:: EnterNormalMode(true)
-  ; Normal (Quick/WASD) Mode
-  !>#w:: EnterWASDMode(true)
-  !>#a:: EnterWASDMode(true)
-  !>#s:: EnterWASDMode(true)
-  !>#d:: EnterWASDMode(true)
-  ; Immediately issue commands
-  <#<!+M:: JumpMiddle()
-  <#<!+H:: JumpLeftEdge()
-  <#<!+J:: JumpBottomEdge()
-  <#<!+K:: JumpTopEdge()
-  <#<!+L:: JumpRightEdge()
-  <#<!i:: MouseLeft()
-  <#<!o:: MouseRight()
-  <#<!p:: MouseMiddle()
-  <#<!n:: MouseForward()
-  <#<!b:: MouseBack()
-  <#<!v:: Drag()
-  <#<!+V:: RightDrag()
-  <#<!+Y:: Yank()
-  <#<!e:: ScrollDown()
-  <#<!y:: ScrollUp()
-  <#<!d:: ScrollDownMore()
-  <#<!u:: ScrollUpMore()
-  <#<!0:: ScrollDown()
-  <#<!9:: ScrollUp()
+  +Capslock:: Send, {Capslock}
+#If (INSERT_MODE && INSERT_QUICK == false)
+  Capslock:: EnterNormalMode(true)
 #If (INSERT_MODE && INSERT_QUICK)
   ; send input to whatever you were typing in
   ~Enter:: EnterNormalMode()
@@ -427,11 +370,6 @@ ScrollDownMore() {
   +A:: JumpLeftEdge()
   +S:: JumpBottomEdge()
   +D:: JumpRightEdge()
-  ; Intercept WASD/Quick movement keys
-  !>#w:: Return
-  !>#a:: Return
-  !>#s:: Return
-  !>#d:: Return
   e:: ScrollDown()
   +E:: ScrollDownMore()
   Space:: ScrollDownMore()
