@@ -93,6 +93,7 @@ EnterNormalMode(quick:=false) {
     msg := msg . " (QUICK)"
   }
   ShowModePopup(msg)
+
   If (NORMAL_MODE) {
     Return
   }
@@ -264,13 +265,16 @@ ScrollDownMore() {
 
 
 ; BINDINGS
+; WINNERS: Home and Insert. They feel right. They feel good.
+Home:: EnterNormalMode()
++Home:: Send, {Home}
+Insert:: EnterInsertMode()
++Insert:: Send, {Insert}
+
 #If (NORMAL_MODE)
   ; I hate not being able to press Escape
   ; Esc EnterInsertMode()
   ; 
-  ; WINNERS: Home and Insert. They feel right. They feel good.
-  Insert:: EnterInsertMode()
-  +Insert:: Send, {Insert}
   ; Honorable mentions
   <#<!Enter:: EnterInsertMode()
   <#<!Space:: EnterInsertMode()
@@ -283,6 +287,8 @@ ScrollDownMore() {
   ~f:: EnterInsertMode(true)
   ; passthru to common "search" hotkey
   ~^f:: EnterInsertMode(true)
+  ; passthru for new tab
+  ~^t:: EnterInsertMode(true)
   ; passthru for quick edits
   ~Delete:: EnterInsertMode(true)
   ~Backspace:: EnterInsertMode(true)
@@ -343,8 +349,6 @@ ScrollDownMore() {
   ^k:: Send {Up}
   ^l:: Send {Right}
 #If (INSERT_MODE)
-  Home:: EnterNormalMode()
-  +Home:: Send, {Home}
   ; we'll see which one we like, or probably just leave both
   <#<!Enter:: EnterNormalMode()
   <#<!Space:: EnterNormalMode()
@@ -372,7 +376,6 @@ ScrollDownMore() {
   +D:: JumpRightEdge()
   e:: ScrollDown()
   +E:: ScrollDownMore()
-  Space:: ScrollDownMore()
   q:: ScrollUp()
   +Q:: ScrollUpMore()
   r:: MouseLeft()
