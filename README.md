@@ -28,7 +28,7 @@ You can access normal Home and Insert behavior with `Shift Home/Insert` when the
 - `Y` "yank" a window (reposition it) (press i to release)
 - `b` "back" mouse button
 - `n` "forward" mouse button
-- ``^q,`,Insert`` other ways to enter Insert mode
+- ``^q,Insert`` other ways to enter Insert mode
 
 ### Normal "WASD" Mode
 
@@ -45,9 +45,6 @@ WASD mode is now the default for Normal Mode.
 - `y` middle click
 - `e` scroll down
 - `q` scroll up
-- `E` scroll down faster
-- `Q` scroll up faster
-- `Space` scroll down faster
 
 Note that this necessarily unbinds `d` `e` and `y` from their non WASD bindings.
 
@@ -69,13 +66,13 @@ Insert mode.
 
 ##### Entering
 From Normal mode:
-- `:` enter
-- `Capslock` toggle
-- `f` send f then enter (for Vimium hotlinks)
-- `^f` send ctrl f then enter (commonly "search")
-- `^t` send ctrl t then enter (new tab in the browser)
-- `Delete` send Delete then enter (for quick fixes)
-- `Backspace` send Backspace then enter (for quick fixes)
+- `:` enter q.i.
+- `Capslock` toggle q.i.
+- `f` send f then enter q.i. (for Vimium hotlinks)
+- `^f` send ctrl f then enter q.i. (commonly "search")
+- `^t` send ctrl t then enter q.i. (new tab in the browser)
+- `Delete` send Delete then enter q.i. (for quick fixes)
+- `Backspace` send Backspace then enter q.i. (same idea)
 
 ##### Exiting
 From quick Insert mode:
