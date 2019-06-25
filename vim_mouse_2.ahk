@@ -6,7 +6,7 @@
 ; Astrid Fesz-Nguyen
 ; 2019-04-14
 ;
-; Last updated 2019-04-20
+; Last updated 2019-06-24
 
 global INSERT_MODE := false
 global INSERT_QUICK := false
@@ -24,15 +24,18 @@ global RESISTANCE := 0.982
 global VELOCITY_X := 0
 global VELOCITY_Y := 0
 
-EnterNormalMode()
+; Insert Mode by default
+EnterInsertMode()
 
 Accelerate(velocity, pos, neg) {
   If (pos == 0 && neg == 0) {
     Return 0
   }
+  ; smooth deceleration :)
   Else If (pos + neg == 0) {
     Return velocity * 0.666
   }
+  ; physicszzzzz
   Else {
     Return velocity * RESISTANCE + FORCE * (pos + neg)
   }
@@ -74,6 +77,7 @@ MoveCursor() {
 
   MouseMove, %VELOCITY_X%, %VELOCITY_Y%, 0, R
 
+  ;(humble beginnings)
   ;MsgBox, %NORMAL_MODE%
   ;msg1 := "h " . LEFT . " j  " . DOWN . " k " . UP . " l " . RIGHT
   ;MsgBox, %msg1%
@@ -265,16 +269,13 @@ ScrollDownMore() {
 
 
 ; BINDINGS
-; WINNERS: Home and Insert. They feel right. They feel good.
-Home:: EnterNormalMode()
 +Home:: Send, {Home}
 Insert:: EnterInsertMode()
 +Insert:: Send, {Insert}
 
 #If (NORMAL_MODE)
-  ; I hate not being able to press Escape
-  ; Esc EnterInsertMode()
-  ; 
+  ; show popup, but pass thru 
+  ~Home:: EnterNormalMode()
   ; Honorable mentions
   <#<!Enter:: EnterInsertMode()
   <#<!Space:: EnterInsertMode()
@@ -282,7 +283,6 @@ Insert:: EnterInsertMode()
   `:: ClickInsert()
   +`:: ClickInsert(false)
   +S:: DoubleClickInsert()
-  ; what the hell, have another
   ; passthru for Vimium hotlinks 
   ~f:: EnterInsertMode(true)
   ; passthru to common "search" hotkey
@@ -327,9 +327,9 @@ Insert:: EnterInsertMode()
   [:: ScrollUp()
   +]:: ScrollDownMore()
   +[:: ScrollUpMore()
-; Addl Vim hotkeys that conflict with WASD mode
 #If (NORMAL_MODE && NORMAL_QUICK == false)
   Capslock:: EnterInsertMode(true)
+; Addl Vim hotkeys that conflict with WASD mode
 #If (NORMAL_MODE && WASD == false)
   <#<!r:: EnterWASDMode()
   e:: ScrollDown()
@@ -349,6 +349,10 @@ Insert:: EnterInsertMode()
   ^k:: Send {Up}
   ^l:: Send {Right}
 #If (INSERT_MODE)
+  ; do not pass thru in Insert Mode
+  Home:: EnterNormalMode()
+  ; pass thru Insert in Insert Mode
+  ~*Insert:: EnterInsertMode(false)
   ; we'll see which one we like, or probably just leave both
   <#<!Enter:: EnterNormalMode()
   <#<!Space:: EnterNormalMode()
@@ -357,11 +361,9 @@ Insert:: EnterInsertMode()
 #If (INSERT_MODE && INSERT_QUICK == false)
   Capslock:: EnterNormalMode(true)
 #If (INSERT_MODE && INSERT_QUICK)
-  ; send input to whatever you were typing in
   ~Enter:: EnterNormalMode()
   ^c:: EnterNormalMode()
   Capslock:: EnterNormalMode()
-  Insert:: EnterInsertMode(false)
 #If (NORMAL_MODE && WASD)
   <#<!r:: ExitWASDMode()
   ; Intercept movement keys
