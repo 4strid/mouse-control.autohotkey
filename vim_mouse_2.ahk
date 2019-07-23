@@ -270,10 +270,13 @@ ScrollDownMore() {
 }
 
 
-; BINDINGS
+; "FINAL" MODE SWITCH BINDINGS
 +Home:: Send, {Home}
 Insert:: EnterInsertMode()
 +Insert:: Send, {Insert}
+<#<!n:: EnterNormalMode()
+<#<!i:: EnterInsertMode()
+
 
 #If (NORMAL_MODE)
   ; show popup, but pass thru 

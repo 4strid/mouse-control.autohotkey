@@ -31,12 +31,10 @@ no judgment here! We're not all programmers after all!
 Like Vim, vim\_mouse has modes of input, with "Insert mode" acting like a regular keyboard
 and "Normal mode" intercepting keys to move and control the mouse instead.
 
-`Home` enters Normal mode
-`Insert` enters Insert mode (clever right?)
+`Home` or `Win Alt n` enters Normal mode
+`Insert` or `Win Alt i` enters Insert mode
 
 You can also switch between modes use either `Win Alt Enter` or `Win Alt Space`
-
-You can access normal Home and Insert behavior with `Shift Home/Insert`
 
 ### Normal mode
 
@@ -55,7 +53,7 @@ You can access normal Home and Insert behavior with `Shift Home/Insert`
 - `Y` "yank" a window (reposition it) (press i to release)
 - `b` "back" mouse button
 - `n` "forward" mouse button
-- ``^q,Insert`` other ways to enter Insert mode
+- `Insert,Win+Alt+i` enter Insert mode
 
 ### Normal "WASD" mode
 
@@ -81,7 +79,7 @@ Otherwise, it is just a variant of Normal mode and the rest of the hotkeys remai
 
 Acts like a normal keyboard.
 
-`Home` `Win Alt Space` and `Win Alt Enter` put you in Normal mode.
+`Home` `Win Alt n` `Win Alt Space` and `Win Alt Enter` put you in Normal mode.
 
 ### Normal "Quick" mode
 If you're in persistent Insert mode and just need the mouse keys for a second, you can hold
@@ -101,7 +99,6 @@ From Normal mode
 - `^f` send ctrl f then enter QI (commonly "search")
 - `^t` send ctrl t then enter QI (new tab in the browser)
 - `Delete` send Delete then enter QI (for quick fixes)
-- `Backspace` send Backspace then enter QI (same idea)
 
 ##### Exiting
 From quick Insert mode:
@@ -117,9 +114,8 @@ From quick Insert mode:
 #### For Vim Purists
 _"Why doesn't `i` take me into Insert mode and `Escape` put me in Normal mode! >:U"_
 
-I tried to leave some variant of `i` as an alternative to enter Insert mode but it was impossible
-for me to keep straight when it would switch modes and when it was left click, so now it's just
-consistently left click which is less likely to make me upset.
+I made `i` left click. You've got `Win Alt i` which is a nice and unintrusive variant of `i`.
+We didn't even used to have that when Win Alt was part of Quick modes so there you go.
 
 `Escape` is too useful a key to bind to anything.  It was infuriating to hit Escape and not have
 the expected effect so I took it out.
@@ -128,7 +124,7 @@ the expected effect so I took it out.
 
 _"How come I can't make my own keybindings >:I"_
 
-I like these ones. You can fork the repo or make a pull request if you want to set up managing an ini file :^)
+I like these ones. You can fork the repo to make your own, or make a pull request if you want to set up managing an ini file :^)
 
 #### The mouse moves too fast! (or too slow)
 
