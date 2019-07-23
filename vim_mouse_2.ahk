@@ -90,8 +90,8 @@ EnterNormalMode(quick:=false) {
   NORMAL_QUICK := quick
 
   msg := "NORMAL"
-  If (WASD) {
-    msg := msg . " (WASD)"
+  If (WASD == false) {
+    msg := msg . " (VIM)"
   }
   If (quick) {
     msg := msg . " (QUICK)"
@@ -109,7 +109,7 @@ EnterNormalMode(quick:=false) {
 }
 
 EnterWASDMode(quick:=false) {
-  msg := "NORMAL (WASD)"
+  msg := "NORMAL"
   If (quick) {
     msg := msg . " (QUICK)"
   }
@@ -119,7 +119,7 @@ EnterWASDMode(quick:=false) {
 }
 
 ExitWASDMode() {
-  ShowModePopup("NORMAL")
+  ShowModePopup("NORMAL (VIM)")
   WASD := false
 }
 
@@ -147,6 +147,8 @@ DoubleClickInsert(quick:=true) {
   Click
   EnterInsertMode(quick)
 }
+
+; TODO: Show popup the active screen instead of always primary
 
 ShowModePopup(msg) {
   ; clean up any lingering popups
@@ -291,7 +293,6 @@ Insert:: EnterInsertMode()
   ~^t:: EnterInsertMode(true)
   ; passthru for quick edits
   ~Delete:: EnterInsertMode(true)
-  ~Backspace:: EnterInsertMode(true)
   ; do not pass thru
   +;:: EnterInsertMode(true)
   ; intercept movement keys
@@ -304,12 +305,9 @@ Insert:: EnterInsertMode()
   +K:: JumpTopEdge()
   +L:: JumpRightEdge()
   ; commands
-  i:: MouseLeft()
-  ^i:: MouseLeft()
-  +I:: MouseLeft()
-  !i:: MouseLeft()
-  o:: MouseRight()
-  p:: MouseMiddle()
+  *i:: MouseLeft()
+  *o:: MouseRight()
+  *p:: MouseMiddle()
   ; do not conflict with y as in "scroll up"
   +Y:: Yank()
   v:: Drag()
