@@ -34,8 +34,6 @@ and "Normal mode" intercepting keys to move and control the mouse instead.
 `Home` or `Win Alt n` enters Normal mode
 `Insert` or `Win Alt i` enters Insert mode
 
-You can also switch between modes use either `Win Alt Enter` or `Win Alt Space`
-
 ### Normal mode
 
 - `hjkl` move the mouse
@@ -79,7 +77,7 @@ Otherwise, it is just a variant of Normal mode and the rest of the hotkeys remai
 
 Acts like a normal keyboard.
 
-`Home` `Win Alt n` `Win Alt Space` and `Win Alt Enter` put you in Normal mode.
+`Home` and `Win Alt n` put you in Normal mode.
 
 ### Normal "Quick" mode
 If you're in persistent Insert mode and just need the mouse keys for a second, you can hold

@@ -271,6 +271,7 @@ ScrollDownMore() {
 
 
 ; "FINAL" MODE SWITCH BINDINGS
+Home:: EnterNormalMode()
 +Home:: Send, {Home}
 Insert:: EnterInsertMode()
 +Insert:: Send, {Insert}
@@ -279,11 +280,6 @@ Insert:: EnterInsertMode()
 
 
 #If (NORMAL_MODE)
-  ; show popup, but pass thru 
-  ~Home:: EnterNormalMode()
-  ; Honorable mentions
-  <#<!Enter:: EnterInsertMode()
-  <#<!Space:: EnterInsertMode()
   ; Many paths to Quick Insert
   `:: ClickInsert()
   +`:: ClickInsert(false)
@@ -318,6 +314,11 @@ Insert:: EnterInsertMode()
   +M:: JumpMiddle()
   +,:: JumpMiddle2()
   +.:: JumpMiddle3()
+  ; ahh what the heck, remove shift requirements for jump bindings
+  ; maybe take "m" back if we ever make marks
+  m:: JumpMiddle()
+  ,:: JumpMiddle2()
+  .:: JumpMiddle3()
   n:: MouseForward()
   b:: MouseBack()
   ; allow for modifier keys (or more importantly a lack of them) by lifting ctrl requirement for these hotkeys
@@ -350,20 +351,17 @@ Insert:: EnterInsertMode()
   ^k:: Send {Up}
   ^l:: Send {Right}
 #If (INSERT_MODE)
-  ; do not pass thru in Insert Mode
-  Home:: EnterNormalMode()
   ; pass thru Insert in Insert Mode
+  ; (shift + insert is a binding for paste in ~someone's~ terminal)
   ~*Insert:: EnterInsertMode(false)
-  ; we'll see which one we like, or probably just leave both
-  <#<!Enter:: EnterNormalMode()
-  <#<!Space:: EnterNormalMode()
   ; Normal (Quick) Mode
   +Capslock:: Send, {Capslock}
 #If (INSERT_MODE && INSERT_QUICK == false)
   Capslock:: EnterNormalMode(true)
 #If (INSERT_MODE && INSERT_QUICK)
   ~Enter:: EnterNormalMode()
-  ^c:: EnterNormalMode()
+  ; Copy and return to Normal Mode
+  ~^c:: EnterNormalMode()
   Capslock:: EnterNormalMode()
 #If (NORMAL_MODE && WASD)
   <#<!r:: ExitWASDMode()
@@ -381,10 +379,14 @@ Insert:: EnterInsertMode()
   *q:: ScrollUp()
   *r:: MouseLeft()
   t:: MouseRight()
+  +T:: MouseRight()
   *y:: MouseMiddle()
 #If
 
 ; FUTURE CONSIDERATIONS
 ; AwaitKey function for vimesque multi keystroke commands (gg, yy, 2M, etc)
 ; "Marks" for remembering and restoring mouse positions (needs AwaitKey)
+; v to let go of mouse when mouse is down with v (lemme crop in Paint.exe)
+; z for click and release middle mouse? this has historically not worked well
+; c guess that leaves c for hold / release right mouse
 ; Whatever you can think of! Github issues and pull requests welcome
