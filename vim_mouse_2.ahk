@@ -148,13 +148,16 @@ DoubleClickInsert(quick:=true) {
   EnterInsertMode(quick)
 }
 
-; TODO: Show popup the active screen instead of always primary
-
 ShowModePopup(msg) {
   ; clean up any lingering popups
   ClosePopup()
-  y := A_ScreenHeight - 50
-  Progress, b x15 y%y% zh0,, %msg%,
+  mx := 0
+  my := 0
+  CoordMode, Mouse, Screen
+  MouseGetPos, mx, my
+  popx := mx - 150
+  popy := my - 66
+  Progress, b x%popx% y%popy% zh0 w300 h56 fm24,, %msg%,,SimSun
   SetTimer, ClosePopup, -1600
 }
 
@@ -388,5 +391,5 @@ Insert:: EnterInsertMode()
 ; "Marks" for remembering and restoring mouse positions (needs AwaitKey)
 ; v to let go of mouse when mouse is down with v (lemme crop in Paint.exe)
 ; z for click and release middle mouse? this has historically not worked well
-; c guess that leaves c for hold / release right mouse
+; c guess that leaves c for hold / release right mouse (x is useful in chronmium)
 ; Whatever you can think of! Github issues and pull requests welcome
