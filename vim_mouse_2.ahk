@@ -24,6 +24,8 @@ global RESISTANCE := 0.982
 global VELOCITY_X := 0
 global VELOCITY_Y := 0
 
+global POP_UP := false
+
 ; Insert Mode by default
 EnterInsertMode()
 
@@ -148,6 +150,9 @@ DoubleClickInsert(quick:=true) {
   EnterInsertMode(quick)
 }
 
+; TODO: still don't really like this.
+; bottom corner of the screen the mouse is on would be ideal.
+
 ShowModePopup(msg) {
   ; clean up any lingering popups
   ClosePopup()
@@ -159,10 +164,12 @@ ShowModePopup(msg) {
   popy := my - 66
   Progress, b x%popx% y%popy% zh0 w300 h56 fm24,, %msg%,,SimSun
   SetTimer, ClosePopup, -1600
+  POP_UP := true
 }
 
 ClosePopup() {
   Progress, Off
+  POP_UP := false
 }
 
 Drag() {
@@ -384,6 +391,8 @@ Insert:: EnterInsertMode()
   t:: MouseRight()
   +T:: MouseRight()
   *y:: MouseMiddle()
+#If (POP_UP)
+  Escape:: ClosePopup()
 #If
 
 ; FUTURE CONSIDERATIONS
