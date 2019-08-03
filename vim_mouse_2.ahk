@@ -24,6 +24,8 @@ global RESISTANCE := 0.982
 global VELOCITY_X := 0
 global VELOCITY_Y := 0
 
+global POP_UP := false
+
 ; Insert Mode by default
 EnterInsertMode()
 
@@ -148,18 +150,23 @@ DoubleClickInsert(quick:=true) {
   EnterInsertMode(quick)
 }
 
-; TODO: Show popup the active screen instead of always primary
+; TODO: still don't really like this.
+; bottom corner of the screen the mouse is on would be ideal.
 
 ShowModePopup(msg) {
   ; clean up any lingering popups
   ClosePopup()
-  y := A_ScreenHeight - 50
-  Progress, b x15 y%y% zh0,, %msg%,
+  center := MonitorLeftEdge() + (A_ScreenWidth // 2)
+  popx := center - 150
+  popy := (A_ScreenHeight // 2) - 28
+  Progress, b x%popx% y%popy% zh0 w300 h56 fm24,, %msg%,,SimSun
   SetTimer, ClosePopup, -1600
+  POP_UP := true
 }
 
 ClosePopup() {
   Progress, Off
+  POP_UP := false
 }
 
 Drag() {
@@ -212,32 +219,43 @@ JumpMiddle3() {
   MouseMove, (A_ScreenWidth * 2 + A_ScreenWidth // 2), (A_ScreenHeight // 2)
 }
 
+MonitorLeftEdge() {
+  mx := 0
+  CoordMode, Mouse, Screen
+  MouseGetPos, mx
+  monitor := (mx // A_ScreenWidth)
+
+  return monitor * A_ScreenWidth
+}
+
 JumpLeftEdge() {
+  x := MonitorLeftEdge() + 2
   y := 0
   CoordMode, Mouse, Screen
-  MouseGetPos,, y
-  MouseMove, 2, y
+  MouseGetPos,,y
+  MouseMove, x,y
 }
 
 JumpBottomEdge() {
   x := 0
   CoordMode, Mouse, Screen
   MouseGetPos, x
-  MouseMove, x, (A_ScreenHeight - 0)
+  MouseMove, x,(A_ScreenHeight - 0)
 }
 
 JumpTopEdge() {
   x := 0
   CoordMode, Mouse, Screen
   MouseGetPos, x
-  MouseMove, x, 0
+  MouseMove, x,0
 }
 
 JumpRightEdge() {
+  x := MonitorLeftEdge() + A_ScreenWidth - 2
   y := 0
   CoordMode, Mouse, Screen
-  MouseGetPos,, y
-  MouseMove, (A_ScreenWidth - 2), y
+  MouseGetPos,,y
+  MouseMove, x,y
 }
 
 MouseBack() {
@@ -384,6 +402,8 @@ Insert:: EnterInsertMode()
   t:: MouseRight()
   +T:: MouseRight()
   *y:: MouseMiddle()
+#If (POP_UP)
+  Escape:: ClosePopup()
 #If
 
 ; FUTURE CONSIDERATIONS
@@ -391,5 +411,5 @@ Insert:: EnterInsertMode()
 ; "Marks" for remembering and restoring mouse positions (needs AwaitKey)
 ; v to let go of mouse when mouse is down with v (lemme crop in Paint.exe)
 ; z for click and release middle mouse? this has historically not worked well
-; c guess that leaves c for hold / release right mouse
+; c guess that leaves c for hold / release right mouse (x is useful in chronmium)
 ; Whatever you can think of! Github issues and pull requests welcome
