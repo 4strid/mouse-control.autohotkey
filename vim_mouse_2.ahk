@@ -174,11 +174,14 @@ Drag() {
 }
 
 Yank() {
+  wx := 0
+  wy := 0
   width := 0
-  WinGetPos,,,width,,A
-  center := width / 2
+  WinGetPos,wx,wy,width,,A
+  center := wx + width - 180
+  y := wy + 12
   ;MsgBox, Hello %width% %center%
-  MouseMove, Center, 10
+  MouseMove, center, y
   Drag()
 }
 
