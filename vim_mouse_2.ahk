@@ -156,12 +156,9 @@ DoubleClickInsert(quick:=true) {
 ShowModePopup(msg) {
   ; clean up any lingering popups
   ClosePopup()
-  mx := 0
-  my := 0
-  CoordMode, Mouse, Screen
-  MouseGetPos, mx, my
-  popx := mx - 150
-  popy := my - 66
+  center := MonitorLeftEdge() + (A_ScreenWidth // 2)
+  popx := center - 150
+  popy := (A_ScreenHeight // 2) - 28
   Progress, b x%popx% y%popy% zh0 w300 h56 fm24,, %msg%,,SimSun
   SetTimer, ClosePopup, -1600
   POP_UP := true
@@ -219,32 +216,43 @@ JumpMiddle3() {
   MouseMove, (A_ScreenWidth * 2 + A_ScreenWidth // 2), (A_ScreenHeight // 2)
 }
 
+MonitorLeftEdge() {
+  mx := 0
+  CoordMode, Mouse, Screen
+  MouseGetPos, mx
+  monitor := (mx // A_ScreenWidth)
+
+  return monitor * A_ScreenWidth
+}
+
 JumpLeftEdge() {
+  x := MonitorLeftEdge() + 2
   y := 0
   CoordMode, Mouse, Screen
-  MouseGetPos,, y
-  MouseMove, 2, y
+  MouseGetPos,,y
+  MouseMove, x,y
 }
 
 JumpBottomEdge() {
   x := 0
   CoordMode, Mouse, Screen
   MouseGetPos, x
-  MouseMove, x, (A_ScreenHeight - 0)
+  MouseMove, x,(A_ScreenHeight - 0)
 }
 
 JumpTopEdge() {
   x := 0
   CoordMode, Mouse, Screen
   MouseGetPos, x
-  MouseMove, x, 0
+  MouseMove, x,0
 }
 
 JumpRightEdge() {
+  x := MonitorLeftEdge() + A_ScreenWidth - 2
   y := 0
   CoordMode, Mouse, Screen
-  MouseGetPos,, y
-  MouseMove, (A_ScreenWidth - 2), y
+  MouseGetPos,,y
+  MouseMove, x,y
 }
 
 MouseBack() {
