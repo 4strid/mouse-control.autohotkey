@@ -145,7 +145,7 @@ ClickInsert(quick:=true) {
 
 DoubleClickInsert(quick:=true) {
   Click
-  Sleep, 50
+  Sleep, 100
   Click
   EnterInsertMode(quick)
 }
@@ -293,17 +293,21 @@ ScrollDownMore() {
 
 ; "FINAL" MODE SWITCH BINDINGS
 Home:: EnterNormalMode()
-+Home:: Send, {Home}
 Insert:: EnterInsertMode()
-+Insert:: Send, {Insert}
 <#<!n:: EnterNormalMode()
 <#<!i:: EnterInsertMode()
 
+; escape hatches
++Home:: Send, {Home}
++Insert:: Send, {Insert}
+^Capslock:: Send, {Capslock}
+
 
 #If (NORMAL_MODE)
-  ; Many paths to Quick Insert
-  `:: ClickInsert()
+  ; focus window and enter Insert
   +`:: ClickInsert(false)
+  ; Many paths to Quick Insert
+  `:: ClickInsert(true)
   +S:: DoubleClickInsert()
   ; passthru for Vimium hotlinks 
   ~f:: EnterInsertMode(true)
@@ -352,6 +356,7 @@ Insert:: EnterInsertMode()
   +[:: ScrollUpMore()
 #If (NORMAL_MODE && NORMAL_QUICK == false)
   Capslock:: EnterInsertMode(true)
+  +Capslock:: EnterInsertMode()
 ; Addl Vim hotkeys that conflict with WASD mode
 #If (NORMAL_MODE && WASD == false)
   <#<!r:: EnterWASDMode()
@@ -372,17 +377,15 @@ Insert:: EnterInsertMode()
   ^k:: Send {Up}
   ^l:: Send {Right}
 #If (INSERT_MODE)
-  ; pass thru Insert in Insert Mode
-  ; (shift + insert is a binding for paste in ~someone's~ terminal)
-  ~*Insert:: EnterInsertMode(false)
   ; Normal (Quick) Mode
-  +Capslock:: Send, {Capslock}
 #If (INSERT_MODE && INSERT_QUICK == false)
   Capslock:: EnterNormalMode(true)
+  +Capslock:: EnterNormalMode()
 #If (INSERT_MODE && INSERT_QUICK)
   ~Enter:: EnterNormalMode()
   ; Copy and return to Normal Mode
   ~^c:: EnterNormalMode()
+  Escape:: EnterNormalMode()
   Capslock:: EnterNormalMode()
 #If (NORMAL_MODE && WASD)
   <#<!r:: ExitWASDMode()
