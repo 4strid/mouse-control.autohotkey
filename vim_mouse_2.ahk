@@ -143,15 +143,14 @@ ClickInsert(quick:=true) {
   EnterInsertMode(quick)
 }
 
+; FIXME:
+; doesn't really work well
 DoubleClickInsert(quick:=true) {
   Click
   Sleep, 100
   Click
   EnterInsertMode(quick)
 }
-
-; TODO: still don't really like this.
-; bottom corner of the screen the mouse is on would be ideal.
 
 ShowModePopup(msg) {
   ; clean up any lingering popups
@@ -300,7 +299,11 @@ Insert:: EnterInsertMode()
 ; escape hatches
 +Home:: Send, {Home}
 +Insert:: Send, {Insert}
+;FIXME
+; doesn't turn caplsock off.
 ^Capslock:: Send, {Capslock}
+; meh. good enough.
+^+Capslock:: SetCapsLockState, Off
 
 
 #If (NORMAL_MODE)
@@ -354,6 +357,7 @@ Insert:: EnterInsertMode()
   [:: ScrollUp()
   +]:: ScrollDownMore()
   +[:: ScrollUpMore()
+  End:: Click, Up
 #If (NORMAL_MODE && NORMAL_QUICK == false)
   Capslock:: EnterInsertMode(true)
   +Capslock:: EnterInsertMode()
