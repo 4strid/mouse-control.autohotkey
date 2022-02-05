@@ -6,7 +6,7 @@
 ; Astrid Ivy
 ; 2019-04-14
 ;
-; Last updated 2022-02-05
+; Last updated 2019-06-24
 
 global INSERT_MODE := false
 global INSERT_QUICK := false
@@ -25,6 +25,10 @@ global VELOCITY_X := 0
 global VELOCITY_Y := 0
 
 global POP_UP := false
+
+global IDLE := false
+
+global DEBUG := false
 
 ; Insert Mode by default
 EnterInsertMode()
@@ -77,9 +81,22 @@ MoveCursor() {
   VELOCITY_X := Accelerate(VELOCITY_X, LEFT, RIGHT)
   VELOCITY_Y := Accelerate(VELOCITY_Y, UP, DOWN)
 
-  RestoreDPI:=DllCall("SetThreadDpiAwarenessContext","ptr",-3,"ptr") ; enable per-monitor DPI awareness
+  RestoreDPI:=DllCall("SetThreadDpiAwarenessContext","ptr",-3,"ptr") ; enable per-monitor DPI awareness and save current value to restore it when done - thanks to lexikos for this
 
   MouseMove, %VELOCITY_X%, %VELOCITY_Y%, 0, R
+
+  If (VELOCITY_X == 0 && VELOCITY_Y == 0) {
+    If (IDLE == false) {
+      SetTimer, IdleTimer, 25000
+      IDLE := true
+    }
+  } Else {
+    IDLE := false
+  }
+
+  If (DEBUG && (VELOCITY_X != 0 || VELOCITY_Y != 0)) {
+    ShowDebugPopup()
+  }
 
   ;(humble beginnings)
   ;MsgBox, %NORMAL_MODE%
@@ -99,6 +116,8 @@ EnterNormalMode(quick:=false) {
   }
   If (quick) {
     msg := msg . " (QUICK)"
+  } Else {
+    SetCapsLockState, Off
   }
   ShowModePopup(msg)
 
@@ -110,6 +129,7 @@ EnterNormalMode(quick:=false) {
   INSERT_QUICK := false
 
   SetTimer, MoveCursor, 16
+
 }
 
 EnterWASDMode(quick:=false) {
@@ -132,12 +152,21 @@ EnterInsertMode(quick:=false) {
   msg := "INSERT"
   If (quick) {
     msg := msg . " (QUICK)"
+  } Else {
+    SetCapsLockState, Off
   }
   ShowModePopup(msg)
   INSERT_MODE := true
   INSERT_QUICK := quick
   NORMAL_MODE := false
   NORMAL_QUICK := false
+}
+
+IdleTimer() {
+  If (IDLE) {
+    EnterInsertMode()
+    ClosePopup()
+  }
 }
 
 ClickInsert(quick:=true) {
@@ -168,6 +197,25 @@ ShowModePopup(msg) {
 ClosePopup() {
   Progress, Off
   POP_UP := false
+}
+
+ShowDebugPopup() {
+  ClosePopup()
+  MouseGetPos, mx, my
+  msg := "x=" . mx . "`ny=" . my . "`ndx=" . VELOCITY_X . "`ndy=" . VELOCITY_Y
+  x := 1000
+  y := 600
+  Progress, b x%x% y%y% zh0 w220 h150 fm15,, %msg%,,SimSun
+  POP_UP := true
+}
+
+ToggleDebug() {
+  If (DEBUG == false) {
+    DEBUG := true
+    ShowModePopup("DEBUG")
+  } Else {
+    DEBUG := false
+  }
 }
 
 Drag() {
@@ -229,6 +277,18 @@ MonitorLeftEdge() {
   return monitor * A_ScreenWidth
 }
 
+WhichMonitor() {
+SysGet, count, MonitorCount
+Loop, %count%
+{
+    SysGet, Monitor, Monitor, %A_Index%
+    CoordMode, Mouse, Screen
+    MouseGetPos, mx
+    MsgBox, Monitor:`t#%A_Index%`nName:`t%MonitorName%`nLeft:`t%MonitorLeft% (%MonitorWorkAreaLeft% work)`nTop:`t%MonitorTop% (%MonitorWorkAreaTop% work)`nRight:`t%MonitorRight% (%MonitorWorkAreaRight% work)`nBottom:`t%MonitorBottom% (%MonitorWorkAreaBottom% work)
+    MsgBox, %mx%
+}
+}
+
 JumpLeftEdge() {
   x := MonitorLeftEdge() + 2
   y := 0
@@ -273,6 +333,7 @@ ScrollUp() {
 
 ScrollDown() {
   Click, WheelDown
+  IDLE := false
 }
 
 ScrollUpMore() {
@@ -360,9 +421,10 @@ Insert:: EnterInsertMode()
   +]:: ScrollDownMore()
   +[:: ScrollUpMore()
   End:: Click, Up
+  +/:: ToggleDebug()
 #If (NORMAL_MODE && NORMAL_QUICK == false)
-  Capslock:: EnterInsertMode(true)
-  +Capslock:: EnterInsertMode()
+  ~Capslock:: EnterInsertMode(true)
+  ~+Capslock:: EnterInsertMode()
 ; Addl Vim hotkeys that conflict with WASD mode
 #If (NORMAL_MODE && WASD == false)
   <#<!r:: EnterWASDMode()
@@ -385,14 +447,15 @@ Insert:: EnterInsertMode()
 #If (INSERT_MODE)
   ; Normal (Quick) Mode
 #If (INSERT_MODE && INSERT_QUICK == false)
-  Capslock:: EnterNormalMode(true)
-  +Capslock:: EnterNormalMode()
+  ~Capslock:: EnterNormalMode(true)
+  ~+Capslock:: EnterNormalMode()
 #If (INSERT_MODE && INSERT_QUICK)
   ~Enter:: EnterNormalMode()
   ; Copy and return to Normal Mode
   ~^c:: EnterNormalMode()
   Escape:: EnterNormalMode()
-  Capslock:: EnterNormalMode()
+  ~Capslock:: EnterNormalMode()
+  ~+Capslock:: EnterNormalMode()
 #If (NORMAL_MODE && WASD)
   <#<!r:: ExitWASDMode()
   ; Intercept movement keys
@@ -408,6 +471,7 @@ Insert:: EnterInsertMode()
   *e:: ScrollDown()
   *q:: ScrollUp()
   *r:: MouseLeft()
+  ~^r:: MouseLeft()
   t:: MouseRight()
   +T:: MouseRight()
   *y:: MouseMiddle()
