@@ -77,6 +77,8 @@ MoveCursor() {
   VELOCITY_X := Accelerate(VELOCITY_X, LEFT, RIGHT)
   VELOCITY_Y := Accelerate(VELOCITY_Y, UP, DOWN)
 
+  RestoreDPI:=DllCall("SetThreadDpiAwarenessContext","ptr",-3,"ptr") ; enable per-monitor DPI awareness
+
   MouseMove, %VELOCITY_X%, %VELOCITY_Y%, 0, R
 
   ;(humble beginnings)
