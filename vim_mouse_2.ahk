@@ -3,10 +3,10 @@
 ; vim_mouse_2.ahk
 ; vim (and now also WASD!) bindings to control the mouse with the keyboard
 ; 
-; Astrid Fesz-Nguyen
+; Astrid Ivy
 ; 2019-04-14
 ;
-; Last updated 2019-06-24
+; Last updated 2022-02-05
 
 global INSERT_MODE := false
 global INSERT_QUICK := false
