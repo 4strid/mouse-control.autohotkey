@@ -212,12 +212,12 @@ JumpMiddle() {
 
 JumpMiddle2() {
   CoordMode, Mouse, Screen
-  MouseMove, (A_ScreenWidth + A_ScreenWidth // 2), (A_ScreenHeight // 2)
+  MouseMove, (- A_ScreenWidth // 2), (A_ScreenHeight // 2)
 }
 
 JumpMiddle3() {
   CoordMode, Mouse, Screen
-  MouseMove, (A_ScreenWidth * 2 + A_ScreenWidth // 2), (A_ScreenHeight // 2)
+  MouseMove, (- A_ScreenWidth - A_ScreenWidth // 2), (A_ScreenHeight // 2)
 }
 
 MonitorLeftEdge() {
