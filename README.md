@@ -1,4 +1,4 @@
-# vim\_mouse\_2.ahk
+# mouse-control.autohotkey
 AutoHotkey script with Vim (and now also WASD!) bindings to control the mouse with the keyboard
 
 ## Why use a mouse control script?
@@ -10,7 +10,7 @@ at creating a program to do so, and I hope you find it as pleasant and convenien
 ## Installation
 Download the script and binary by cloning this repository from GitHub.  The command to run is
 
-`git clone git@github.com:cutejs/vim_mouse_2.ahk.git`
+`git clone git@github.com:4strid/mouse-control.autohotkey.git`
 
 If that sentence makes no sense to you at all, no worries! Simply download the repository
 as a zip file, unzip it, and run the included executable mouse-control.exe :>
@@ -82,9 +82,8 @@ WASD mode is now the default for Normal mode.
 - `e` scroll down
 - `q` scroll up
 
-Note that this necessarily unbinds `d` `e` and `y` from their Vim bindings.
-
-Otherwise, it is just a variant of Normal mode and the rest of the hotkeys remain unchanged.
+Note that this necessarily unbinds `d` `e` and `y` from their Vim bindings. The rest of the hotkeys
+remain unchanged.
 
 ### Insert mode
 
@@ -122,10 +121,10 @@ From quick Insert mode:
 
 ## Last Remarks
 
-## Alternative to Numpad Mouse I am aware of the Numpad Mouse feature included in Windows, and consider this a Massive improvement
-over the builtin functionality. I'll say that again, for search optimization, This is an alternative
-to Numpad Mouse with considerably better usability, and additional functionality. It is a faster, easier
-to use alternative to Numpad Mouse. 
+## Alternative to Numpad Mouse I am aware of the Numpad Mouse feature included in Windows, and consider
+this a Massive improvement over the builtin functionality. I'll say that again, for search optimization,
+This is an alternative to Numpad Mouse with considerably better usability, and additional functionality.
+It is a faster, easier to use alternative to Numpad Mouse. 
 
 #### For Vim Purists
 _"Why doesn't `i` take me into Insert mode and `Escape` put me in Normal mode! >:U"_
@@ -140,7 +139,8 @@ the expected effect so I took it out.
 
 _"How come I can't make my own keybindings >:I"_
 
-I like these ones. You can fork the repo to make your own, or make a pull request if you want to set up managing an ini file :^)
+I like these ones. You can fork the repo to make your own, or make a pull request if you want to set up
+managing an ini file :^)
 
 #### The mouse moves too fast! (or too slow)
 
