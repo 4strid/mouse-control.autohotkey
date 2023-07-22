@@ -26,6 +26,8 @@ global VELOCITY_Y := 0
 
 global POP_UP := false
 
+global DRAGGING := false
+
 ; Insert Mode by default
 EnterInsertMode()
 
@@ -171,7 +173,33 @@ ClosePopup() {
 }
 
 Drag() {
-  Click, Down
+  If (DRAGGING) {
+    Click, Left, Up
+    DRAGGING := false
+  } else {
+    Click, Left, Down
+    DRAGGING := true
+  }
+}
+
+RightDrag() {
+  If (DRAGGING) {
+    Click, Right, Up
+    DRAGGING := false
+  } else {
+    Click, Right, Down
+    DRAGGING := true
+  }
+}
+
+MiddleDrag() {
+  If (DRAGGING) {
+    Send, {MButton down}
+    DRAGGING := false
+  } else {
+    Send, {MButton up}
+    DRAGGING := true
+  }
 }
 
 Yank() {
@@ -186,20 +214,19 @@ Yank() {
   Drag()
 }
 
-RightDrag() {
-  Click, Right, Down
-}
-
 MouseLeft() {
   Click
+  DRAGGING := false
 }
 
 MouseRight() {
   Click, Right
+  DRAGGING := false
 }
 
 MouseMiddle() {
   Click, Middle
+  DRAGGING := false
 }
 
 ; TODO: When we have more monitors, set up H and L to use current screen as basis
@@ -341,6 +368,7 @@ Insert:: EnterInsertMode()
   +Y:: Yank()
   v:: Drag()
   z:: RightDrag()
+  c:: MiddleDrag()
   +M:: JumpMiddle()
   +,:: JumpMiddle2()
   +.:: JumpMiddle3()
@@ -393,6 +421,7 @@ Insert:: EnterInsertMode()
   ~^c:: EnterNormalMode()
   Escape:: EnterNormalMode()
   Capslock:: EnterNormalMode()
+  +Capslock:: EnterNormalMode()
 #If (NORMAL_MODE && WASD)
   <#<!r:: ExitWASDMode()
   ; Intercept movement keys
