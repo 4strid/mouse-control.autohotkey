@@ -121,7 +121,7 @@ From quick Insert mode:
 
 ## Last Remarks
 
-## Alternative to Numpad Mouse
+#### Alternative to Numpad Mouse
 I am aware of the Numpad Mouse feature included in Windows, and consider this a Massive improvement over
 the builtin functionality. I'll say that again, for search optimization,
 This is an alternative to Numpad Mouse with considerably better usability, and additional functionality.
