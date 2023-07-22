@@ -1,17 +1,27 @@
 # vim\_mouse\_2.ahk
 AutoHotkey script with Vim (and now also WASD!) bindings to control the mouse with the keyboard
 
+## Why use a mouse control script?
+This is my implementation of a hardware mouse, in software. As of 2023 I believe it has full
+feature parity with an actual mouse, and has been optimized by daily use for several years.
+Whatever your reasons for trying to drive the mouse with the keys, this is my very best attempt
+at creating a program to do so, and I hope you find it as pleasant and convenient to use as I do.
+
 ## Installation
-Download the script and binary by cloning this repository from GitHub. (You'll need to install
-Git if you don't have it.) The command to run is
+Download the script and binary by cloning this repository from GitHub.  The command to run is
+`git clone git@github.com:cutejs/vim_mouse_2.ahk.git`
 
-`git clone https://github.com/cutejs/vim_mouse_2.ahk.git`
+If that sentence makes no sense to you at all, no worries! Simply download the repository
+as a zip file, unzip it, and run the included executable mouse-control.exe :>
 
-(Or if you're fancy, clone it with SSH)
+The benefit to using git is you can keep up to date with `git pull`. I'm still (periodically)
+pushing little updates here and there to make it better and easier to use.
 
-You can of course also just download it as a zip file, but cloning is recommended as you
-can keep up to date with `git pull`. I'm still regularly pushing little updates here and there
-to make it better and easier to use, so you might want to check periodically.
+### Precompiled Binary
+As of the latest release, a precompiled version is shipped with the source code so you
+don't have to install anything at all. Just double click the .exe and you're gucci golden!
+(It's the one with a cute little mouse icon) (Well, I think it's cute; I'm not much of an
+artist, admittedly)
 
 ### Running from Source
 You should run this script from source; never trust binaries you just find lying around
@@ -20,11 +30,10 @@ on the Internet, even if it's from a trustworthy source like yours truly :^)
 To run it you'll need to install AutoHotkey first. Then you should be able to double click
 the .ahk file to run the script. Pretty easy right?
 
-### Precompiled Binary
-As of the latest release, a precompiled version is shipped with the source code so you
-don't have to install anything at all. Just double click the .exe and you're gucci golden!
-(It's the one with a cute little mouse icon) (Well, I think it's cute; I'm not much of an
-artist, admittedly)
+#### AS OF (WHENEVER IT WAS) AHK has updated to "Version 2.0"
+Luckily it turns out, you can install either version 1.1 or 2.0, as when
+you try to run mouse-control.ahk in Version 2, it will happily download the old version
+and run it appropriately. 
 
 ## Modes of Input
 This program has modes of input, allowing the keys to *sometimes* drive the mouse, and
@@ -111,6 +120,11 @@ From quick Insert mode:
 `Insert` enters regular (persistent) Insert mode
 
 ## Last Remarks
+
+## Alternative to Numpad Mouse I am aware of the Numpad Mouse feature included in Windows, and consider this a Massive improvement
+over the builtin functionality. I'll say that again, for search optimization, This is an alternative
+to Numpad Mouse with considerably better usability, and additional functionality. It is a faster, easier
+to use alternative to Numpad Mouse. 
 
 #### For Vim Purists
 _"Why doesn't `i` take me into Insert mode and `Escape` put me in Normal mode! >:U"_
