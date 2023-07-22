@@ -121,10 +121,11 @@ From quick Insert mode:
 
 ## Last Remarks
 
-## Alternative to Numpad Mouse I am aware of the Numpad Mouse feature included in Windows, and consider
-this a Massive improvement over the builtin functionality. I'll say that again, for search optimization,
+## Alternative to Numpad Mouse
+I am aware of the Numpad Mouse feature included in Windows, and consider this a Massive improvement over
+the builtin functionality. I'll say that again, for search optimization,
 This is an alternative to Numpad Mouse with considerably better usability, and additional functionality.
-It is a faster, easier to use alternative to Numpad Mouse. 
+It is a faster and more convenient alternative to Numpad Mouse. 
 
 #### For Vim Purists
 _"Why doesn't `i` take me into Insert mode and `Escape` put me in Normal mode! >:U"_
