@@ -194,12 +194,18 @@ RightDrag() {
 
 MiddleDrag() {
   If (DRAGGING) {
-    Send, {MButton down}
+    Click, Middle, Up
     DRAGGING := false
   } else {
-    Send, {MButton up}
+    Send, {MButton down}
     DRAGGING := true
   }
+}
+
+ReleaseDrag(button) {
+  Click, Middle, Up
+  Click, button
+  DRAGGING := false
 }
 
 Yank() {
@@ -440,6 +446,10 @@ Insert:: EnterInsertMode()
   t:: MouseRight()
   +T:: MouseRight()
   *y:: MouseMiddle()
+#IF (DRAGGING)
+  LButton:: ReleaseDrag(1)
+  MButton:: ReleaseDrag(2)
+  RButton:: ReleaseDrag(3)
 #If (POP_UP)
   Escape:: ClosePopup()
 #If

@@ -23,13 +23,15 @@ the .ahk file to run the script. Pretty easy right?
 ### Precompiled Binary
 As of the latest release, a precompiled version is shipped with the source code so you
 don't have to install anything at all. Just double click the .exe and you're gucci golden!
-
-If you do it this way, imagine me frowning a bit and seeming mildly disappointed. Just kidding, 
-no judgment here! We're not all programmers after all!
+(It's the one with a cute little mouse icon) (Well, I think it's cute; I'm not much of an
+artist, admittedly)
 
 ## Modes of Input
-Like Vim, vim\_mouse has modes of input, with "Insert mode" acting like a regular keyboard
-and "Normal mode" intercepting keys to move and control the mouse instead.
+This program has modes of input, allowing the keys to *sometimes* drive the mouse, and
+sometimes drive the keyboard (inspired by the text editor Vim). There's "Insert mode"
+where the keys behave normally and "Normal mode" intercepting keys to move and control
+the mouse instead. (These names are lifted from Vim. I'm aware, "Normal" mode isn't
+very normal at all)
 
 `Home` or `Win Alt n` enters Normal mode
 `Insert` or `Win Alt i` enters Insert mode
@@ -42,8 +44,9 @@ and "Normal mode" intercepting keys to move and control the mouse instead.
 - `i` left click
 - `o` right click
 - `p` middle click
-- `v` hold down left click
-- `V` hold down right click (???)
+- `v` hold down left click (hit `v` or any mouse button again to release)
+- `z` hold down right click (hit `z` or any mouse button again to release)
+- `c` hold down middle click (hit `c` or any mouse button again to release)
 - `e,0,]` scroll down
 - `y,9,[` scroll up
 - `d,}` scroll down faster
@@ -135,4 +138,4 @@ Use the uncompiled .ahk script and you can change these to taste.
 ## Contact
 
 Bug reports, questions, feature requests, and pull requests are all welcome.
-Just open an issue on Github.
+Just open an issue on Github. (Or email me ! Don't be shy I'm really nice)
