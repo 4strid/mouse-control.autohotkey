@@ -9,6 +9,7 @@ at creating a program to do so, and I hope you find it as pleasant and convenien
 
 ## Installation
 Download the script and binary by cloning this repository from GitHub.  The command to run is
+
 `git clone git@github.com:cutejs/vim_mouse_2.ahk.git`
 
 If that sentence makes no sense to you at all, no worries! Simply download the repository
