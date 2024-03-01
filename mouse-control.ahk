@@ -344,9 +344,8 @@ Insert:: EnterInsertMode()
 #If (NORMAL_MODE)
   ; focus window and enter Insert
   +`:: ClickInsert(false)
-  ; Many paths to Quick Insert
+  ; path to Quick Insert
   `:: ClickInsert(true)
-  +S:: DoubleClickInsert()
   ; passthru for Vimium hotlinks 
   ~f:: EnterInsertMode(true)
   ; passthru to common "search" hotkey
@@ -403,6 +402,7 @@ Insert:: EnterInsertMode()
   e:: ScrollDown()
   y:: ScrollUp()
   d:: ScrollDownMore()
+  +S:: DoubleClickInsert()
 ; No shift requirements in normal quick mode
 #If (NORMAL_MODE && NORMAL_QUICK)
   Capslock:: Return
